@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bastion</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <img class="banner" src="img/bastion.png">
+     <!-- <h2>BASTION</h2> -->
+  </header>
+
+  <main>
+    <aside>
+      <h1>Links</h1>
+      <ul>
+        <li><a href="./index.html">Start</a></li>
+        <li><a href="./bastion.html">Bastion</a></li>
+        <li><a href="./Pihole.html">Pihole</a></li>
+      </ul>
+    </aside>
+    <section>
+      <p>
+        Bastion host a.k.a. jumphost. This is the entry point for the whole thing.
+        If you want to get into any host, you have to go through the bastion.
+        To get to a host, you need to get into the bastion first and then you can get to where you want to go.
+        Thus you'll need two keys to get to the target. It also means the bastion has to be watertight.
+      </p>
+
+      <h2>Create container</h2>
+      <p>
+        The bastion is going to run in a small Alpine container within Proxmox.
+        The only thing running here will be OpenSSH, so it's not going to need much in the way of resources.
+        If I'm wrong, it can be changed later.
+        The main guide followed was <a
+          href="https://www.wirsingsecurity.com/tutorials/jump-servers-and-bastion-hosts-for-homelab-access/">this
+          one</a>.
+        <a
+          href="https://weblog.lkiesow.de/20220223-proxmox-test-machine-self-servic/ssh-jumphost-to-internal-network.html">Also
+          this.</a>
+      </p>
+      <pre><code class="language-bash">pct create 100 local:vztmpl/alpine-3.23-default_20260116_amd64.tar.xz \
+  --hostname bastion \
+  --memory 64 \
+  --cores 1 \
+  --rootfs local-lvm:1 \
+  --net0 name=eth0,bridge=vmbr0,gw=192.168.1.1,ip=192.168.1.14/24 \
+  --ostype alpine \
+  --unprivileged 1
+pct set 100 --onboot 1
+pct start 100
+pct enter 100
+apk update
+apk upgrade
+</code></pre>
+      <h2>Enable automatic updates</h2>
+      <p><code>crontab -e</code>
+        Add the line:</p>
+      <pre><code>0	2	*	*	*	apk update &amp;&amp; apk upgrade
+</code></pre>
+      <h2>Install SSH server</h2>
+      <pre><code class="language-bash">pct exec 100 -- apk add openssh
+pct exec 100 -- rc-service sshd start
+</code></pre>
+      <h2>Disable root login</h2>
+      <p><code>vi /etc/ssh/sshd_config</code>
+        Change <code>#PermitRootLogin prohibit-password</code>
+        to <code>PermitRootLogin no</code></p>
+      <h2>Create/configure <code>admin</code> user</h2>
+      <p><a
+          href="https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user">https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user</a>
+      </p>
+      <pre><code class="language-bash">setup-user -a admin # Creates a locked admin user
+grep admin /etc/passwd
+	admin:x:1000:1000::/home/admin:/bin/bash # Alpine uses ash not bash
+apk add shadow
+chsh -s /bin/ash admin
+grep admin /etc/passwd
+	admin:x:1000:1000::/home/admin:/bin/ash # Fixed!
+passwd admin # Set a password and unlock user
+su - admin
+bastion:~$ doas pwd
+	doas: /etc/doas.d/20-wheel.conf is writable by group or other
+bastion:~$ exit
+ls -l /etc/doas.d/20-wheel.conf 
+	-rw-rw-r--    1 root     root            22 Jul  4 13:17 /etc/doas.d/20-wheel.conf
+chmod 640 /etc/doas.d/20-wheel.conf 
+ls -l /etc/doas.d/20-wheel.conf 
+	-rw-r-----    1 root     root            22 Jul  4 13:17 /etc/doas.d/20-wheel.conf
+su - admin
+bastion:~$ doas pwd
+doas (admin@bastion) password: 
+/home/admin
+</code></pre>
+      <h2>Configure ssh</h2>
+      <p>Create key pair on dev machine <code>ssh-keygen -t ed25519</code>.
+        Then on bastion:</p>
+      <pre><code class="language-bash">mkdir -p /home/admin/.ssh
+chmod 700 /home/admin/.ssh/
+echo &quot;ssh-ed25519 XXX damo@thinkpad&quot; &gt; /home/admin/.ssh/authorized_keys
+chmod 600 /home/admin/.ssh/authorized_keys 
+</code></pre>
+      <p>Swap out /etc/ssh/sshd_config as per the guide linked at the top.</p>
+      <ul>
+        <li><code>ListenAddress</code> - IP of the container</li>
+        <li><code>AllowUsers</code> - only the admin user
+          Test connection from dev machine</li>
+        <li><code>ssh admin@192.168.1.14</code>
+          If successful, add it to <code>~/.ssh/config</code> on dev machine.
+          Once this has been installed etc., run the following:
+          <code>doas rc-update add sshd    # start SSH server on boot</code>
+        </li>
+      </ul>
+      <h2>Configure firewall</h2>
+      <p><code>doas apk add ufw</code>
+        Follow config / rule creation as per linked guide.
+        <a href="https://wiki.alpinelinux.org/wiki/Uncomplicated_Firewall">More info here.</a>
+      </p>
+      <pre><code class="language-bash">bastion:~$ doas ufw status verbose
+Status: active
+Logging: on (low)
+Default: deny (incoming), deny (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW IN    Anywhere                  
+22/tcp (v6)                ALLOW IN    Anywhere (v6)             
+
+22/tcp                     ALLOW OUT   Anywhere                  
+53/udp                     ALLOW OUT   Anywhere                  
+80/tcp                     ALLOW OUT   Anywhere                  
+443/tcp                    ALLOW OUT   Anywhere                  
+123/udp                    ALLOW OUT   Anywhere                  
+22/tcp (v6)                ALLOW OUT   Anywhere (v6)             
+53/udp (v6)                ALLOW OUT   Anywhere (v6)             
+80/tcp (v6)                ALLOW OUT   Anywhere (v6)             
+443/tcp (v6)               ALLOW OUT   Anywhere (v6)             
+123/udp (v6)               ALLOW OUT   Anywhere (v6) 
+</code></pre>
+      <p>After this has been installed run the following commands:</p>
+      <pre><code>doas ufw enable     # enable the firewall
+doas rc-update add ufw    # add UFW init scripts
+</code></pre>
+      <h2>Configure fail2ban</h2>
+      <p><code>doas apk add fail2ban</code>
+        Follow config / rule creation as per linked guide.
+        EXCEPT
+        The guide uses <code>logpath = /var/log/auth.log</code>. Alpine does not store logs here and instead uses
+        <code>/var/log/messaes</code>.
+        Thus, in <code>/etc/fail2ban/jail.local</code>, specify <code>logpath = /var/log/messages</code>.
+        <a href="https://wiki.alpinelinux.org/wiki/Fail2ban">Useful link</a>.
+      </p>
+      <pre><code>/ # rc-service fail2ban start
+ * Starting fail2ban ...
+Server ready                                                                                                                                                              [ ok ]
+/ # fail2ban-client status sshd
+Status for the jail: sshd
+|- Filter
+|  |- Currently failed:	0
+|  |- Total failed:	0
+|  `- File list:	/var/log/messages
+`- Actions
+   |- Currently banned:	0
+   |- Total banned:	0
+   `- Banned IP list:	
+/ # rc-status
+Runlevel: default
+ crond                   [  started  ]
+ networking              [  started  ]
+Dynamic Runlevel: hotplugged
+Dynamic Runlevel: needed/wanted
+ localmount              [  started  ]
+Dynamic Runlevel: manual
+ sshd                    [  started  ]
+ fail2ban                [  started  ]
+</code></pre>
+      <p>Once this has been installed etc., run the following:
+        <code>doas rc-update add fail2ban    # start fail2ban server on boot</code>
+      </p>
+      <h2>ProxyJump</h2>
+      <p>On dev machine, edit <code>~/.ssh/config</code>. Add in <code>ProxyJump bastion</code> to the config of each
+        host
+        on the proxmox server.</p>
+      <h2>Lock down hosts</h2>
+      <p>Again, following the guide.</p>
+      <ul>
+        <li>On proxmox host <code>AllowUsers</code> has been added to <code>/etc/ssh/sshd_config</code>. The allowed
+          user
+          will be one that exists on the host, not the bastion.</li>
+        <li>Also, <code>iptables</code> rules added as per guide to accept only SSH from the bastion</li>
+      </ul>
+      <pre><code class="language-bash">iptables -A INPUT -p tcp --dport 22 -s 192.168.1.14 -j ACCEPT
+iptables -A INPUT -p tcp --dport 22 -j DROP
+</code></pre>
+      <p>Install <code>iptables-persistent</code> on proxmox host. This reloads <code>iptables</code> rules after a
+        reboot.
+        Rules are saved on install. If rules are modified after this, the command <code>iptables-save</code> must be
+        used.
+        Can also use <code>netfilter-persistent save</code>.</p>
+      <hr>
+      <h1>Problems</h1>
+      <h2><code># Enable automatic security updates — this is non-negotiable for an internet-facing host</code></h2>
+      <p><a href="https://blog.bythewood.me/posts/minimal-automated-updates-for-alpine-linux/">Different for Alpine</a>
+        <code>apk-autoupdate</code> is <a
+          href="https://pkgs.alpinelinux.org/packages?name=apk-autoupdate&amp;branch=v3.23&amp;repo=&amp;arch=x86_64&amp;origin=&amp;flagged=&amp;maintainer=">not
+          available in latest Alpine version</a>
+      </p>
+      <h3>Solution</h3>
+      <p><a href="https://wiki.alpinelinux.org/wiki/Securing_Alpine_Linux#Regular_maintenance">Add a cronjob into the
+          crontable</a>:</p>
+      <ul>
+        <li><code>crontab -e</code> to edit</li>
+        <li><code>crontab -l</code> to show table</li>
+      </ul>
+      <pre><code class="language-bash">/ # crontab -l
+# do daily/weekly/monthly maintenance
+# min	hour	day	month	weekday	command
+*/15	*	*	*	*	run-parts /etc/periodic/15min
+0	*	*	*	*	run-parts /etc/periodic/hourly
+0	2	*	*	*	run-parts /etc/periodic/daily
+0	3	*	*	6	run-parts /etc/periodic/weekly
+0	5	1	*	*	run-parts /etc/periodic/monthly
+0	2	*	*	*	apk update &amp;&amp; apk upgrade
+</code></pre>
+      <h2>“Create a dedicated admin user and disable root login”</h2>
+      <p><a href="https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user">Alpine uses <code>adduser</code> instead of
+          <code>useradd</code></a>.</p>
+      <ul>
+        <li><code>adduser admin</code>
+          Alpine uses <code>doas</code> instead of <code>sudo</code>
+          <code>doas: /etc/doas.d/20-wheel.conf is writable by group or other</code>
+        </li>
+        <li><code>chmod 640 /etc/doas.d/20-wheel.conf</code></li>
+        <li>
+          <pre><code>  / # cat /etc/doas.conf 
+  permit persist :wheel as root
+  / # cat /etc/doas.d/20-wheel.conf 
+  permit nopass :wheel
+</code></pre>
+        </li>
+      </ul>
+      <p>Edited summary of troubleshooting from <a href="http://duck.ai">duck.ai</a> (GPT-5.4 nano)</p>
+      <ul>
+        <li>
+          Tightened permissions on <code>/etc/doas.d/20-wheel.conf</code> to make it no longer group/other-writable
+          (<code>chmod 640</code>, later verified as <code>-rw-r-----</code>).
+        </li>
+        <li>
+          Discovered the initial config in <code>/etc/doas.conf</code> was commented out and ensured the active policy
+          was
+          present (placed the rule into <code>/etc/doas.d/20-wheel.conf</code>, and also briefly wrote it into
+          <code>/etc/doas.conf</code>).
+        </li>
+        <li>
+          Ensured the <code>admin</code> user could log in with a valid shell (installed <code>shadow</code>, then set
+          admin’s shell using <code>chsh</code>).
+        </li>
+        <li>
+          Set the rule to allow <em>no-password</em> prompts for <code>admin</code> by using:
+          <code>permit nopass :wheel</code> in <code>/etc/doas.d/20-wheel.conf</code>.
+        </li>
+        <li>
+          Confirmed <code>admin</code> is in the <code>wheel</code> group and verified with <code>doas pwd</code>
+          (success).
+        </li>
+      </ul>
+      <h2>“Configuring fail2ban”</h2>
+      <pre><code class="language-bash">/ # rc-service fail2ban start
+ * Starting fail2ban ...
+2026-07-04 14:55:32,481 fail2ban                [1545]: ERROR   Failed during configuration: Have not found any log file for sshd jail
+ * start-stop-daemon: failed to start `/usr/bin/fail2ban-client'
+ * Failed to start fail2ban                                                                                                                                               [ !! ]
+ * ERROR: fail2ban failed to start
+
+</code></pre>
+      <p><a href="https://wiki.alpinelinux.org/wiki/Fail2ban">https://wiki.alpinelinux.org/wiki/Fail2ban</a></p>
+      <h3>Solution</h3>
+      <p>File <code>jail.local</code> in the guide specifies <code>/var/log/auth.log</code> for logpath. Alpine uses
+        <code>/var/log/messages</code>.
+      </p>
+    </section>
+  </main>
+
+</body>
+
+</html>

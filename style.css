@@ -1,0 +1,127 @@
+@font-face {
+  font-family: "Olde English";
+  src: url('./font/OldeEnglish.ttf') format("truetype");
+}
+
+body {
+    background-color: rgb(192, 192, 192);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0;
+}
+
+header {
+    background-color: black;
+    justify-content: center;
+    display: flex;
+}
+
+h1 {
+    font-family: "Olde English";
+    font-size: 180px;
+    font-weight: 1;
+    color: white;
+    margin: 10;
+}
+
+main {
+    display: flex;
+}
+
+aside {
+    width: 20%;
+}
+
+section {
+    float: left;
+    max-width: 50%;
+}
+
+.banner {
+    object-fit: fill;
+}
+
+/* 
+body {
+    background-color: rgb(192, 192, 192);
+    display: flex;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1em;
+    line-height: 1.6;
+}
+
+header {
+    background-color: black;
+    justify-content: center;
+    padding: 25px;
+    max-height: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+main {
+    justify-content: center;
+}
+
+
+
+aside {
+    width: 20%;
+    float: left;
+    background-color: black;
+}
+
+section {
+    float: left;
+    padding-left: 100px;
+}
+
+a {
+    color: red;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 10%;
+}
+
+.links {
+    padding-left: 10%;
+    color: rgb(192, 192, 192);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+pre {
+    background-color: #000000;
+    color: white;
+    padding: 1em;
+    overflow-x: auto;
+}
+
+code {
+    font-family: monospace;
+}
+
+h1 {
+    padding: 60px;
+    text-align: center;
+    background: #000000;
+    color: white;
+    font-size: 100px;
+} */
