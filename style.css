@@ -1,45 +1,95 @@
 @font-face {
-  font-family: "Olde English";
-  src: url('./font/OldeEnglish.ttf') format("truetype");
+    font-family: "Olde English";
+    src: url('./font/OldeEnglish.ttf') format("truetype");
 }
 
 body {
-    background-color: rgb(192, 192, 192);
+    background-color: black;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     margin: 0;
+    font-family: 'Times New Roman', Times, serif;
+    font-variant: small-caps;
+    font-size: x-large;
 }
 
 header {
-    background-color: black;
-    justify-content: center;
     display: flex;
-}
-
-h1 {
-    font-family: "Olde English";
-    font-size: 180px;
-    font-weight: 1;
-    color: white;
-    margin: 10;
+    justify-content: space-between;
 }
 
 main {
     display: flex;
+    justify-content: space-between;
 }
 
-aside {
+#buffer {
     width: 20%;
+    background-color: white;
 }
 
-section {
-    float: left;
-    max-width: 50%;
+#banner {
+    display: flex;
+    width: 40%;
+    color: white;
+    font-family: "Olde English";
+    font-size: 10vw;
+    justify-content: center;
+    padding: 20px;
 }
 
-.banner {
-    object-fit: fill;
+#section {
+    width: 40%;
+    color: white;
+}
+
+#menu {
+    width: 20%;
+    background-color: white;
+}
+
+#intro {
+    margin-top: 25px;
+}
+
+
+ul {
+    list-style-type: none;
+    position: fixed;
+}
+
+h1 {
+    font-weight: 100;
+}
+
+#menu h1 {
+    font-family: "Olde English";
+}
+
+a {
+    color: red;
+}
+
+pre {
+    white-space: pre-wrap;
+    text-indent: 3em hanging each-line;
+    background-color: rgb(192, 192, 192);
+    font-family: 'Courier New', Courier, monospace;
+    font-variant: normal;
+    font-size: large;
+    color: black;
+    padding: 10px;
+    /* border-radius: 5px; */
+}
+
+#inline-bash {
+    background-color: rgb(192, 192, 192);
+    color: black;
+    font-family: 'Courier New', Courier, monospace;
+    font-variant: normal;
+    font-size: large;
+    padding: 0px 3px;
+    /* border-radius: 5px; */
 }
 
 /* 
