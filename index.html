@@ -16,18 +16,67 @@
     </header>
     <main>
         <div id="menu">
-            <h2 class="links">Links</h2>
             <ul>
-                <li><a href="./index.html">Start</a></li>
+                <h1>Pages</h1>
+                <li><a href="./index.html">Proxmox</a></li>
                 <li><a href="./bastion.html">Bastion</a></li>
                 <li><a href="./Pihole.html">Pihole</a></li>
             </ul>
         </div>
         <div id="section">
-            <h2>Main stuff</h2>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptas molestias maiores dolores aliquam
-                facere inventore ad voluptatum minus natus tenetur iure incidunt eaque distinctio, ea doloremque fugiat
-                error qui sapiente.</p>
+            <h1>Installation</h1>
+            <p>Followed <a href="https://proxmoxr.com/blog/how-to-install-proxmox-ve">this guide</a> and <a
+                    href="https://edywerder.ch/install-proxmox-server/">this one</a>.</p>
+            <p><a href="https://www.proxmox.com/en/downloads">
+                    Download Proxmox ISO.</a></p>
+            Check the hash if you’re paranoid:
+            <pre><code class="language-bash">$ sha256sum proxmox*.iso</code></pre>
+            <p>Plug in USB drive. Don’t mount it.
+                I had to format the drive for some reason. I hadn’t started taking notes.</p>
+            <pre><code class="language-bash">$ sudo fdisk -l
+$ mkfs.exfat /dev/sdc</code></pre>
+            <p>Write ISO to the drive.</p>
+            <pre><code class="language-bash">$ sudo dd if=/home/damo/Downloads/proxmox-ve_9.2-1.iso of=/dev/sdc bs=1M status=progress</code></pre>
+            <p>Plug the drive into what will be the Proxmox machine and boot from the drive. Start the GUI installer and
+                follow the instructions. Follow the guides. Save important info (password, static IP address).
+                Access Proxmox GUI through the browser: <code id="inline-bash">[static IP]:8006</code></p>
+            <hr>
+            <h1>Problems</h1>
+            <h2><code id="header-bash">apt update && apt upgrade</code> Errors</h2>
+            <pre><code class="language-bash">Err:4 https://enterprise.proxmox.com/debian/ceph-squid trixie InRelease     
+    401  Unauthorized [IP: X.X.X.X 443]
+Err:5 https://enterprise.proxmox.com/debian/pve trixie InRelease
+    401  Unauthorized [IP: X.X.X.X 443]
+Error: Failed to fetch https://enterprise.proxmox.com/debian/ceph-squid/dists/trixie/InRelease  401  Unauthorized [IP: X.X.X.X 443]
+Error: The repository 'https://enterprise.proxmox.com/debian/ceph-squid trixie InRelease' is not signed.
+Notice: Updating from such a repository can't be done securely, and is therefore disabled by default.
+Notice: See apt-secure(8) manpage for repository creation and user configuration details.
+Error: Failed to fetch https://enterprise.proxmox.com/debian/pve/dists/trixie/InRelease  401  Unauthorized [IP: X.X.X.X 443]
+Error: The repository 'https://enterprise.proxmox.com/debian/pve trixie InRelease' is not signed.
+Notice: Updating from such a repository can't be done securely, and is therefore disabled by default.
+Notice: See apt-secure(8) manpage for repository creation and user configuration details.</code></pre>
+            <h2>Solution</h2>
+            <p>Proxmox repos include enterprise repos by default. These can be swapped out for free ones.
+                <a
+                    href="https://forum.proxmox.com/threads/pct-command-not-found.91626/post-399490">https://forum.proxmox.com/threads/pct-command-not-found.91626/post-399490</a>
+                <a
+                    href="https://pve.proxmox.com/pve-docs/pve-admin-guide.html#sysadmin_package_repositories">https://pve.proxmox.com/pve-docs/pve-admin-guide.html#sysadmin_package_repositories</a>
+            </p>
+            <h2><code id="header-bash">qm</code> and <code id="header-bash">pct</code> “command not found”</h2>
+            <p><a
+                    href="https://forum.proxmox.com/threads/cli-commands-not-found.184733/">https://forum.proxmox.com/threads/cli-commands-not-found.184733/</a>
+            </p>
+            <h2>Solution</h2>
+            <p>Add <code id="inline-bash">/usr/sbin</code> to PATH</p>
+            <h2>Can't ssh to local ip with VPN connected</h2>
+            <p>Need to turn off VPN to connect to optiplex either from router wifi or extender wifi</p>
+            <h2>Solution</h2>
+            <p>Whitelist the subnet
+            <pre><code id="language-bash">nordvpn whitelist add subnet 192.168.1.0/24</code></pre>
+            <a
+                href="https://gist.github.com/sandeepkv93/84870b21b582866505898cb292ce19ce/50d8ca2e5d66cde025bd0a2b8b72f35bf13279d6#allow-local-subnet">https://gist.github.com/sandeepkv93/84870b21b582866505898cb292ce19ce/50d8ca2e5d66cde025bd0a2b8b72f35bf13279d6#allow-local-subnet</a>
+            </p>
+
         </div>
         <div id="buffer"></div>
     </main>

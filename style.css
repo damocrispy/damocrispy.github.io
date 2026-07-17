@@ -25,7 +25,7 @@ main {
 
 #buffer {
     width: 20%;
-    background-color: white;
+    background-color: rgb(192, 192, 192);
 }
 
 #banner {
@@ -40,12 +40,13 @@ main {
 
 #section {
     width: 40%;
-    color: white;
+    color: rgb(192, 192, 192);
 }
 
 #menu {
     width: 20%;
-    background-color: white;
+    background-color: rgb(192, 192, 192);
+    align-items: stretch;
 }
 
 #intro {
@@ -90,6 +91,12 @@ pre {
     font-size: large;
     padding: 0px 3px;
     /* border-radius: 5px; */
+}
+
+#header-bash {
+    font-family: 'Courier New', Courier, monospace;
+    font-variant: normal;
+    font-size: 0.8em;
 }
 
 /* 
@@ -159,7 +166,7 @@ img {
 
 pre {
     background-color: #000000;
-    color: white;
+    color: rgb(192, 192, 192);
     padding: 1em;
     overflow-x: auto;
 }
@@ -172,6 +179,6 @@ h1 {
     padding: 60px;
     text-align: center;
     background: #000000;
-    color: white;
+    color: rgb(192, 192, 192);
     font-size: 100px;
 } */

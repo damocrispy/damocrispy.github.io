@@ -18,7 +18,7 @@
         <div id="menu">
             <ul>
                 <h1>Pages</h1>
-                <li><a href="./index.html">Start</a></li>
+                <li><a href="./index.html">Proxmox</a></li>
                 <li><a href="./bastion.html">Bastion</a></li>
                 <li><a href="./Pihole.html">Pihole</a></li>
             </ul>
@@ -67,9 +67,9 @@ $ pct exec 100 -- rc-service sshd start
 </code></pre>
             <h1>Disable root login</h1>
             <pre><code id="language-bash">$ vi /etc/ssh/sshd_config</code></pre>
-                Change <code id="inline-bash">#PermitRootLogin prohibit-password</code>
-                to <code id="inline-bash">PermitRootLogin no</code></p>
-            <h1>Create/configure <code id="inline-bash">admin</code> user</h1>
+            Change <code id="inline-bash">#PermitRootLogin prohibit-password</code>
+            to <code id="inline-bash">PermitRootLogin no</code></p>
+            <h1>Create/configure <code id="header-bash">admin</code> user</h1>
             <p><a
                     href="https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user">https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user</a>
             </p>
