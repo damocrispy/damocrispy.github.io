@@ -59,12 +59,14 @@ ul {
     position: fixed;
 }
 
-h1 {
+h1, h2 {
     font-weight: 100;
+    color: white;
 }
 
 #menu h1 {
     font-family: "Olde English";
+    color: black;
 }
 
 a {
