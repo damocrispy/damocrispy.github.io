@@ -1,0 +1,173 @@
+body {
+    background-color: #84422c;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: large;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+}
+
+main {
+    display: flex;
+    justify-content: space-between;
+    min-height: 100vmax;
+}
+
+#buffer {
+    width: 20%;
+    background-color: #44282a;
+}
+
+#banner {
+    display: flex;
+    width: 40%;
+    color: #1ee5d3;
+    font-size: 10vw;
+    font-weight: bold;
+    text-shadow: 0 0 30px;
+    justify-content: center;
+    padding: 50px;
+}
+
+#section {
+    width: 40%;
+    color: #1ee5d3;
+}
+
+#menu {
+    width: 20%;
+    background-color: #44282a;
+    color: #1ee5d3;
+}
+
+#intro {
+    margin-top: 25px;
+}
+
+
+ul {
+    list-style-type: none;
+    position: fixed;
+}
+
+h1, h2 {
+    color: #1ee5d3;
+    text-shadow: 0 0 30px;
+}
+
+a {
+    color: #dddb1b;
+}
+
+pre {
+    white-space: pre-wrap;
+    text-indent: 3em hanging each-line;
+    background-color: #0272a9;
+    font-variant: normal;
+    font-size: large;
+    color: #1ee5d3;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+#inline-bash {
+    background-color: #0272a9;
+    font-variant: normal;
+    font-size: large;
+    padding: 0px 3px;
+    border-radius: 3px;
+}
+
+#header-bash {
+    font-variant: normal;
+    font-size: 0.8em;
+}
+
+/* 
+body {
+    background-color: #84422c;
+    display: flex;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1em;
+    line-height: 1.6;
+}
+
+header {
+    background-color: black;
+    justify-content: center;
+    padding: 25px;
+    max-height: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+main {
+    justify-content: center;
+}
+
+
+
+aside {
+    width: 20%;
+    float: left;
+    background-color: black;
+}
+
+section {
+    float: left;
+    padding-left: 100px;
+}
+
+a {
+    color: red;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 10%;
+}
+
+.links {
+    padding-left: 10%;
+    color: #84422c;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+pre {
+    background-color: #000000;
+    color: #84422c;
+    padding: 1em;
+    overflow-x: auto;
+}
+
+code {
+    font-family: monospace;
+}
+
+h1 {
+    padding: 60px;
+    text-align: center;
+    background: #000000;
+    color: #84422c;
+    font-size: 100px;
+} */
