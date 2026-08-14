@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bastion</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="blade.css">
 </head>
 
 <body>
@@ -18,21 +18,23 @@
         <div id="menu">
             <ul>
                 <h1>Pages</h1>
-                <li><a href="./index.html">Proxmox</a></li>
+                <li><a href="./index.html">Home</a></li>
+                <li><a href="./proxmox.html">Proxmox</a></li>
                 <li><a href="./bastion.html">Bastion</a></li>
-                <li><a href="./Pihole.html">Pihole</a></li>
+                <li><a href="./pihole.html">Pihole</a></li>
+                <li><a href="./about.html">About</a></li>
             </ul>
         </div>
         <div id="section">
-            <p>
+            
                 Bastion host a.k.a. jumphost. This is the entry point for the whole thing.
                 If you want to get into any host, you have to go through the bastion.
                 To get to a host, you need to get into the bastion first and then you can get to where you want to go.
                 Thus you'll need two keys to get to the target. It also means the bastion has to be watertight.
-            </p>
+            <br>
 
             <h1>Create container</h1>
-            <p>
+            
                 The bastion is going to run in a small Alpine container within Proxmox.
                 The only thing running here will be OpenSSH, so it's not going to need much in the way of resources.
                 If I'm wrong, it can be changed later.
@@ -42,7 +44,7 @@
                 <a
                     href="https://weblog.lkiesow.de/20220223-proxmox-test-machine-self-servic/ssh-jumphost-to-internal-network.html">Also
                     this.</a>
-            </p>
+            <br>
             <pre><code id="language-bash">$ pct create 100 local:vztmpl/alpine-3.23-default_20260116_amd64.tar.xz \
 --hostname bastion \
 --memory 64 \
@@ -58,7 +60,7 @@ $ apk update
 $ apk upgrade</code></pre>
             <h1>Enable automatic updates</h1>
             <pre><code id="language-bash">$ crontab -e</code></pre>
-            <p>Add the line:</p>
+            Add the line:<br>
             <pre><code id="language-bash">0    2    *    *    *    apk update &amp;&amp; apk upgrade
 </code></pre>
             <h1>Install SSH server</h1>
@@ -68,11 +70,11 @@ $ pct exec 100 -- rc-service sshd start
             <h1>Disable root login</h1>
             <pre><code id="language-bash">$ vi /etc/ssh/sshd_config</code></pre>
             Change <code id="inline-bash">#PermitRootLogin prohibit-password</code>
-            to <code id="inline-bash">PermitRootLogin no</code></p>
+            to <code id="inline-bash">PermitRootLogin no</code><br>
             <h1>Create/configure <code id="header-bash">admin</code> user</h1>
-            <p><a
+            <a
                     href="https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user">https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user</a>
-            </p>
+            <br>
             <pre><code id="language-bash">$ setup-user -a admin # Creates a locked admin user
 $ grep admin /etc/passwd
 admin:x:1000:1000::/home/admin:/bin/bash # Alpine uses ash not bash
@@ -96,14 +98,14 @@ $ doas (admin@bastion) password:
 /home/admin
 </code></pre>
             <h1>Configure ssh</h1>
-            <p>Create key pair on dev machine <code id="inline-bash">ssh-keygen -t ed25519</code>.
-                Then on bastion:</p>
+            Create key pair on dev machine <code id="inline-bash">ssh-keygen -t ed25519</code>.
+                Then on bastion:<br>
             <pre><code id="language-bash">mkdir -p /home/admin/.ssh
 chmod 700 /home/admin/.ssh/
 echo &quot;ssh-ed25519 XXX damo@thinkpad&quot; &gt; /home/admin/.ssh/authorized_keys
 chmod 600 /home/admin/.ssh/authorized_keys 
 </code></pre>
-            <p>Swap out /etc/ssh/sshd_config as per the guide linked at the top.</p>
+            Swap out /etc/ssh/sshd_config as per the guide linked at the top.<br>
             <ul>
                 <li><code id="inline-bash">ListenAddress</code> - IP of the container</li>
                 <li><code id="inline-bash">AllowUsers</code> - only the admin user
@@ -115,10 +117,10 @@ chmod 600 /home/admin/.ssh/authorized_keys
                 </li>
             </ul>
             <h1>Configure firewall</h1>
-            <p><code id="inline-bash">doas apk add ufw</code>
+            <code id="inline-bash">doas apk add ufw</code>
                 Follow config / rule creation as per linked guide.
-                <a href="https://wiki.alpinelinux.org/wiki/Uncomplicated_Firewall">More info here.</a>
-            </p>
+                <a href="https://wiki.alpinelinux.org/wiki/Unbladelicated_Firewall">More info here.</a>
+            <br>
             <pre><code id="language-bash">bastion:~$ doas ufw status verbose
 Status: active
 Logging: on (low)
@@ -141,12 +143,12 @@ To                         Action      From
 443/tcp (v6)               ALLOW OUT   Anywhere (v6)             
 123/udp (v6)               ALLOW OUT   Anywhere (v6) 
 </code></pre>
-            <p>After this has been installed run the following commands:</p>
+            After this has been installed run the following commands:<br>
             <pre><code id="language-bash">doas ufw enable     # enable the firewall
 doas rc-update add ufw    # add UFW init scripts
 </code></pre>
             <h1>Configure fail2ban</h1>
-            <p><code id="inline-bash">doas apk add fail2ban</code>
+            <code id="inline-bash">doas apk add fail2ban</code>
                 Follow config / rule creation as per linked guide.
                 EXCEPT
                 The guide uses <code id="inline-bash">logpath = /var/log/auth.log</code>. Alpine does not store logs
@@ -156,7 +158,7 @@ doas rc-update add ufw    # add UFW init scripts
                 Thus, in <code id="inline-bash">/etc/fail2ban/jail.local</code>, specify <code
                     id="inline-bash">logpath = /var/log/messages</code>.
                 <a href="https://wiki.alpinelinux.org/wiki/Fail2ban">Useful link</a>.
-            </p>
+            <br>
             <pre><code id="language-bash">/ # rc-service fail2ban start
 * Starting fail2ban ...
 Server ready                                                                                                                                                              [ ok ]
@@ -181,17 +183,17 @@ Dynamic Runlevel: manual
 sshd                    [  started  ]
 fail2ban                [  started  ]
 </code></pre>
-            <p>Once this has been installed etc., run the following:
+            Once this has been installed etc., run the following:
                 <code id="inline-bash">doas rc-update add fail2ban    # start fail2ban server on boot</code>
-            </p>
+            <br>
             <h1>ProxyJump</h1>
-            <p>On dev machine, edit <code id="inline-bash">~/.ssh/config</code>. Add in <code
+            On dev machine, edit <code id="inline-bash">~/.ssh/config</code>. Add in <code
                     id="inline-bash">ProxyJump bastion</code> to the config of
                 each
                 host
-                on the proxmox server.</p>
+                on the proxmox server.<br>
             <h1>Lock down hosts</h1>
-            <p>Again, following the guide.</p>
+            Again, following the guide.<br>
             <ul>
                 <li>On proxmox host <code id="inline-bash">AllowUsers</code> has been added to <code
                         id="inline-bash">/etc/ssh/sshd_config</code>. The
@@ -204,7 +206,7 @@ fail2ban                [  started  ]
             <pre><code id="language-bash">iptables -A INPUT -p tcp --dport 22 -s 192.168.1.14 -j ACCEPT
 iptables -A INPUT -p tcp --dport 22 -j DROP
 </code></pre>
-            <p>Install <code id="inline-bash">iptables-persistent</code> on proxmox host. This reloads <code
+            Install <code id="inline-bash">iptables-persistent</code> on proxmox host. This reloads <code
                     id="inline-bash">iptables</code> rules after
                 a
                 reboot.
@@ -212,22 +214,22 @@ iptables -A INPUT -p tcp --dport 22 -j DROP
                     id="inline-bash">iptables-save</code>
                 must be
                 used.
-                Can also use <code id="inline-bash">netfilter-persistent save</code>.</p>
+                Can also use <code id="inline-bash">netfilter-persistent save</code>.<br>
             <hr>
             <h1>Problems</h1>
             <h1><code
                     id="inline-bash"># Enable automatic security updates — this is non-negotiable for an internet-facing host</code>
             </h1>
-            <p><a href="https://blog.bythewood.me/posts/minimal-automated-updates-for-alpine-linux/">Different for
+            <a href="https://blog.bythewood.me/posts/minimal-automated-updates-for-alpine-linux/">Different for
                     Alpine</a>
                 <code id="inline-bash">apk-autoupdate</code> is <a
                     href="https://pkgs.alpinelinux.org/packages?name=apk-autoupdate&amp;branch=v3.23&amp;repo=&amp;arch=x86_64&amp;origin=&amp;flagged=&amp;maintainer=">not
                     available in latest Alpine version</a>
-            </p>
+            <br>
             <h3>Solution</h3>
-            <p><a href="https://wiki.alpinelinux.org/wiki/Securing_Alpine_Linux#Regular_maintenance">Add a cronjob into
+            <a href="https://wiki.alpinelinux.org/wiki/Securing_Alpine_Linux#Regular_maintenance">Add a cronjob into
                     the
-                    crontable</a>:</p>
+                    crontable</a>:<br>
             <ul>
                 <li><code id="inline-bash">crontab -e</code> to edit</li>
                 <li><code id="inline-bash">crontab -l</code> to show table</li>
@@ -243,10 +245,10 @@ iptables -A INPUT -p tcp --dport 22 -j DROP
 0	2	*	*	*	apk update && apk upgrade
 </code></pre>
             <h1>“Create a dedicated admin user and disable root login”</h1>
-            <p><a href="https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user">Alpine uses <code
+            <a href="https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user">Alpine uses <code
                         id="inline-bash">adduser</code>
                     instead of
-                    <code id="inline-bash">useradd</code></a>.</p>
+                    <code id="inline-bash">useradd</code></a>.<br>
             <ul>
                 <li><code id="inline-bash">adduser admin</code>
                     Alpine uses <code id="inline-bash">doas</code> instead of <code id="inline-bash">sudo</code>
@@ -261,7 +263,7 @@ permit nopass :wheel
 </code></pre>
                 </li>
             </ul>
-            <p>Edited summary of troubleshooting from <a href="http://duck.ai">duck.ai</a> (GPT-5.4 nano)</p>
+            Edited summary of troubleshooting from <a href="http://duck.ai">duck.ai</a> (GPT-5.4 nano)<br>
             <ul>
                 <li>
                     Tightened permissions on <code id="inline-bash">/etc/doas.d/20-wheel.conf</code> to make it no
@@ -306,13 +308,13 @@ permit nopass :wheel
 * ERROR: fail2ban failed to start
 
 </code></pre>
-            <p><a href="https://wiki.alpinelinux.org/wiki/Fail2ban">https://wiki.alpinelinux.org/wiki/Fail2ban</a></p>
+            <a href="https://wiki.alpinelinux.org/wiki/Fail2ban">https://wiki.alpinelinux.org/wiki/Fail2ban</a><br>
             <h3>Solution</h3>
-            <p>File <code id="inline-bash">jail.local</code> in the guide specifies <code
+            File <code id="inline-bash">jail.local</code> in the guide specifies <code
                     id="inline-bash">/var/log/auth.log</code> for logpath. Alpine
                 uses
                 <code id="inline-bash">/var/log/messages</code>.
-            </p>
+            <br>
         </div>
         <div id="buffer"></div>
     </main>

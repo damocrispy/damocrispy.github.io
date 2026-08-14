@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proxmox</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="pop.css">
 </head>
 
 <body>
@@ -18,28 +18,31 @@
         <div id="menu">
             <ul>
                 <h1>Pages</h1>
-                <li><a href="./index.html">Proxmox</a></li>
+                <li><a href="./index.html">Home</a></li>
+                <li><a href="./proxmox.html">Proxmox</a></li>
                 <li><a href="./bastion.html">Bastion</a></li>
-                <li><a href="./Pihole.html">Pihole</a></li>
+                <li><a href="./pihole.html">Pihole</a></li>
+                <li><a href="./about.html">About</a></li>
             </ul>
         </div>
         <div id="section">
             <h1>Installation</h1>
-            <p>Followed <a href="https://proxmoxr.com/blog/how-to-install-proxmox-ve">this guide</a> and <a
-                    href="https://edywerder.ch/install-proxmox-server/">this one</a>.</p>
-            <p><a href="https://www.proxmox.com/en/downloads">
-                    Download Proxmox ISO.</a></p>
+            Followed <a href="https://proxmoxr.com/blog/how-to-install-proxmox-ve">this guide</a> and <a
+                href="https://edywerder.ch/install-proxmox-server/">this one</a>.<br>
+            <a href="https://www.proxmox.com/en/downloads">
+                Download Proxmox ISO.</a><br>
             Check the hash if you’re paranoid:
             <pre><code class="language-bash">$ sha256sum proxmox*.iso</code></pre>
-            <p>Plug in USB drive. Don’t mount it.
-                I had to format the drive for some reason. I hadn’t started taking notes.</p>
+            </pp>
+            Plug in USB drive. Don’t mount it.
+            I had to format the drive for some reason. I hadn’t started taking notes.<br>
             <pre><code class="language-bash">$ sudo fdisk -l
 $ mkfs.exfat /dev/sdc</code></pre>
-            <p>Write ISO to the drive.</p>
+            Write ISO to the drive.<br>
             <pre><code class="language-bash">$ sudo dd if=/home/damo/Downloads/proxmox-ve_9.2-1.iso of=/dev/sdc bs=1M status=progress</code></pre>
-            <p>Plug the drive into what will be the Proxmox machine and boot from the drive. Start the GUI installer and
-                follow the instructions. Follow the guides. Save important info (password, static IP address).
-                Access Proxmox GUI through the browser: <code id="inline-bash">[static IP]:8006</code></p>
+            Plug the drive into what will be the Proxmox machine and boot from the drive. Start the GUI installer and
+            follow the instructions. Follow the guides. Save important info (password, static IP address).
+            Access Proxmox GUI through the browser: <code id="inline-bash">[static IP]:8006</code><br><br>
             <hr>
             <h1>Problems</h1>
             <h2><code id="header-bash">apt update && apt upgrade</code> Errors</h2>
@@ -56,26 +59,26 @@ Error: The repository 'https://enterprise.proxmox.com/debian/pve trixie InReleas
 Notice: Updating from such a repository can't be done securely, and is therefore disabled by default.
 Notice: See apt-secure(8) manpage for repository creation and user configuration details.</code></pre>
             <h2>Solution</h2>
-            <p>Proxmox repos include enterprise repos by default. These can be swapped out for free ones.
-                <a
-                    href="https://forum.proxmox.com/threads/pct-command-not-found.91626/post-399490">https://forum.proxmox.com/threads/pct-command-not-found.91626/post-399490</a>
-                <a
-                    href="https://pve.proxmox.com/pve-docs/pve-admin-guide.html#sysadmin_package_repositories">https://pve.proxmox.com/pve-docs/pve-admin-guide.html#sysadmin_package_repositories</a>
-            </p>
+            Proxmox repos include enterprise repos by default. These can be swapped out for free ones.<br>
+            <a
+                href="https://forum.proxmox.com/threads/pct-command-not-found.91626/post-399490">https://forum.proxmox.com/threads/pct-command-not-found.91626/post-399490</a><br>
+            <a
+                href="https://pve.proxmox.com/pve-docs/pve-admin-guide.html#sysadmin_package_repositories">https://pve.proxmox.com/pve-docs/pve-admin-guide.html#sysadmin_package_repositories</a>
+            <br>
             <h2><code id="header-bash">qm</code> and <code id="header-bash">pct</code> “command not found”</h2>
-            <p><a
-                    href="https://forum.proxmox.com/threads/cli-commands-not-found.184733/">https://forum.proxmox.com/threads/cli-commands-not-found.184733/</a>
-            </p>
+            <a
+                href="https://forum.proxmox.com/threads/cli-commands-not-found.184733/">https://forum.proxmox.com/threads/cli-commands-not-found.184733/</a>
+            <br>
             <h2>Solution</h2>
-            <p>Add <code id="inline-bash">/usr/sbin</code> to PATH</p>
+            Add <code id="inline-bash">/usr/sbin</code> to PATH<br>
             <h2>Can't ssh to local ip with VPN connected</h2>
-            <p>Need to turn off VPN to connect to optiplex either from router wifi or extender wifi</p>
+            Need to turn off VPN to connect to optiplex either from router wifi or extender wifi<br>
             <h2>Solution</h2>
-            <p>Whitelist the subnet
+            Whitelist the subnet
             <pre><code id="language-bash">nordvpn whitelist add subnet 192.168.1.0/24</code></pre>
             <a
                 href="https://gist.github.com/sandeepkv93/84870b21b582866505898cb292ce19ce/50d8ca2e5d66cde025bd0a2b8b72f35bf13279d6#allow-local-subnet">Source</a>
-            </p>
+            <br>
 
         </div>
         <div id="buffer"></div>

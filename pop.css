@@ -1,21 +1,20 @@
 @font-face {
-    font-family: "Olde English";
-    src: url('./font/OldeEnglish.ttf') format("truetype");
+    font-family: "Spicy Sale";
+    src: url('./font/Spicy Sale.ttf') format("truetype");
 }
 
 @font-face {
-    font-family: "Courier Prime";
-    src: url('./font/CourierPrime-Regular.ttf') format("truetype");
+    font-family: "Winky Sans";
+    src: url('./font/WinkySans-Regular.ttf') format("truetype");
 }
 
 body {
-    background-color: black;
+    background-color: yellow;
     display: flex;
     flex-direction: column;
     margin: 0;
-    font-family: 'Times New Roman', Times, serif;
-    font-variant: small-caps;
-    font-size: x-large;
+    font-family: "Winky Sans";
+    font-size: large;
 }
 
 header {
@@ -31,14 +30,15 @@ main {
 
 #buffer {
     width: 20%;
-    background-color: rgb(192, 192, 192);
+    background-color: deepskyblue;
 }
 
 #banner {
     display: flex;
     width: 40%;
-    color: white;
-    font-family: "Olde English";
+    color: deeppink;
+    -webkit-text-stroke: 5px deepskyblue;
+    font-family: "Spicy Sale";
     font-size: 10vw;
     justify-content: center;
     padding: 50px;
@@ -46,7 +46,8 @@ main {
 
 #section {
     width: 40%;
-    color: rgb(192, 192, 192);
+    color: deepskyblue;
+    font-size: 20px;
     text-align: justify;
     text-justify: inter-word;
     padding-bottom: 75px;
@@ -54,7 +55,7 @@ main {
 
 #menu {
     width: 20%;
-    background-color: rgb(192, 192, 192);
+    background-color: deepskyblue;
 }
 
 ul {
@@ -62,45 +63,50 @@ ul {
     position: fixed;
 }
 
-h1, h2 {
+h1,
+h2 {
+    font-family: "Spicy Sale";
     font-weight: 100;
-    color: white;
+    color: deeppink;
 }
 
 #menu h1 {
-    font-family: "Olde English";
-    color: black;
+    font-family: "Spicy Sale";
+    color: deeppink;
 }
 
 a {
-    color: red;
+    color: deeppink;
 }
 
 pre {
     white-space: pre-wrap;
     text-indent: 3em hanging each-line;
     text-align: left;
-    background-color: rgb(192, 192, 192);
-    font-family: "Courier Prime";
+    background-color: lime;
     font-variant: normal;
-    font-size: large;
-    color: black;
+    font-size: 20px;
+    color: deeppink;
     padding: 10px;
-    /* border-radius: 5px; */
+    border-radius: 10px;
+}
+
+code {
+    font-family: "Winky Sans";
 }
 
 #inline-bash {
-    background-color: rgb(192, 192, 192);
-    color: black;
-    font-family: "Courier Prime";
+    background-color: lime;
+    color: deeppink;
+    font-family: "Winky Sans";
     font-variant: normal;
     font-size: large;
     padding: 0px 3px;
-    /* border-radius: 5px; */
+    border-radius: 5px;
 }
 
 #header-bash {
-    font-family: "Courier Prime";
+    font-family: "Winky Sans";
     font-variant: normal;
-    font-size: 0.8em;
+    font-size: 1.3em;
 }
