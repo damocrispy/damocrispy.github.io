@@ -8,24 +8,18 @@
     src: url('./font/WinkySans-Regular.ttf') format("truetype");
 }
 
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
 body {
     background-color: yellow;
     display: flex;
-    flex-direction: column;
-    margin: 0;
+    flex-direction: row;
     font-family: "Winky Sans";
     font-size: large;
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-}
-
-main {
-    display: flex;
-    justify-content: space-between;
-    min-height: 100vh;
 }
 
 #buffer {
@@ -33,34 +27,33 @@ main {
     background-color: deepskyblue;
 }
 
-#banner {
+#section {
     display: flex;
-    width: 40%;
+    flex-direction: column;
+    width: 60%;
+}
+
+#banner {
     color: deeppink;
     -webkit-text-stroke: 5px deepskyblue;
+    text-align: center;
     font-family: "Spicy Sale";
     font-size: 10vw;
-    justify-content: center;
-    padding: 50px;
+    padding: 5vw;
 }
 
-#section {
-    width: 40%;
-    color: deepskyblue;
-    font-size: 20px;
+#content {
+    margin: 0 5vw 0 5vw;
     text-align: justify;
     text-justify: inter-word;
-    padding-bottom: 75px;
-}
-
-#menu {
-    width: 20%;
-    background-color: deepskyblue;
+    color: deeppink;
 }
 
 ul {
     list-style-type: none;
     position: fixed;
+    top: 25vh;
+    font-size: x-large;
 }
 
 h1,
@@ -108,5 +101,5 @@ code {
 #header-bash {
     font-family: "Winky Sans";
     font-variant: normal;
-    font-size: 1.3em;
+    font-size: 1em;
 }

@@ -8,7 +8,6 @@
     src: url('./font/CourierPrime-Regular.ttf') format("truetype");
 }
 
-
 html, body {
     margin: 0;
     padding: 0;
@@ -22,17 +21,6 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     font-size: x-large;
 }
-
-/* header {
-    display: flex;
-    justify-content: space-between;
-}
-
-main {
-    display: flex;
-    justify-content: space-between;
-    min-height: 100vh;
-} */
 
 #buffer {
     width: 20%;
@@ -50,25 +38,24 @@ main {
     text-align: center;
     font-family: "Misfits";
     font-size: 10vw;
-    padding: 50px;
+    padding: 5vw;
 }
 
 #content {
-    margin: 5vw;
+    margin: 0 5vw 0 5vw;
     text-align: justify;
     text-justify: inter-word;
 }
 
 ul {
     list-style-type: none;
-    position: relative;
-    top: 15%;
+    position: fixed;
+    top: 25vh;
 }
 
 h1,
 h2 {
     font-family: "Misfits";
-    font-size: 5vw;
     font-weight: 100;
     color: red;
 }
