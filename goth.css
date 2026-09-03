@@ -3,30 +3,20 @@
     src: url('./font/OldeEnglish.ttf') format("truetype");
 }
 
-@font-face {
-    font-family: "Courier Prime";
-    src: url('./font/CourierPrime-Regular.ttf') format("truetype");
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
 }
 
 body {
     background-color: black;
     display: flex;
-    flex-direction: column;
-    margin: 0;
+    flex-direction: row;
     font-family: 'Times New Roman', Times, serif;
     font-variant: small-caps;
     font-size: x-large;
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-}
-
-main {
-    display: flex;
-    justify-content: space-between;
-    min-height: 100vh;
+    color: rgb(192, 192, 192);
 }
 
 #buffer {
@@ -34,73 +24,46 @@ main {
     background-color: rgb(192, 192, 192);
 }
 
-#banner {
+#section {
     display: flex;
-    width: 40%;
-    color: white;
+    flex-direction: column;
+    width: 60%;
+    padding-bottom: 25%;
+}
+
+#banner {
+    text-align: center;
     font-family: "Olde English";
     font-size: 10vw;
     justify-content: center;
     padding: 50px;
 }
 
-#section {
-    width: 40%;
-    color: rgb(192, 192, 192);
+#content {
+    margin: 0 5vw 0 5vw;
     text-align: justify;
     text-justify: inter-word;
-    padding-bottom: 75px;
 }
 
-#menu {
-    width: 20%;
-    background-color: rgb(192, 192, 192);
+ul.body-list {
+    position: static;
+    top: 25vh;
 }
 
-ul {
+ul.menu-list {
     list-style-type: none;
     position: fixed;
+    top: 25vh;
+    list-style-position: inside;
 }
 
-h1, h2 {
-    font-weight: 100;
-    color: white;
-}
-
-#menu h1 {
+h1, h2, h3 {
     font-family: "Olde English";
+    font-size: 3em;
+    font-weight: 100;
     color: black;
 }
 
 a {
     color: red;
-}
-
-pre {
-    white-space: pre-wrap;
-    text-indent: 3em hanging each-line;
-    text-align: left;
-    background-color: rgb(192, 192, 192);
-    font-family: "Courier Prime";
-    font-variant: normal;
-    font-size: large;
-    color: black;
-    padding: 10px;
-    /* border-radius: 5px; */
-}
-
-#inline-bash {
-    background-color: rgb(192, 192, 192);
-    color: black;
-    font-family: "Courier Prime";
-    font-variant: normal;
-    font-size: large;
-    padding: 0px 3px;
-    /* border-radius: 5px; */
-}
-
-#header-bash {
-    font-family: "Courier Prime";
-    font-variant: normal;
-    font-size: 0.8em;
 }

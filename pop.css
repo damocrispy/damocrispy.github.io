@@ -15,7 +15,7 @@ html, body {
 }
 
 body {
-    background-color: yellow;
+    background-color: deepskyblue;
     display: flex;
     flex-direction: row;
     font-family: "Winky Sans";
@@ -24,13 +24,14 @@ body {
 
 #buffer {
     width: 20%;
-    background-color: deepskyblue;
 }
 
 #section {
+    background-color: yellow;
     display: flex;
     flex-direction: column;
     width: 60%;
+    padding-bottom: 25%;
 }
 
 #banner {
