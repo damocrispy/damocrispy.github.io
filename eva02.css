@@ -5,12 +5,12 @@ html, body {
 }
 
 body {
-    background-color: #592661;
+    background-color: #D3290F;
     display: flex;
     flex-direction: row;
     font-family: Arial, Helvetica, sans-serif;
     font-size: large;
-    color: #E6770B;
+    color: black;
 }
 
 #buffer {
@@ -52,34 +52,35 @@ ul.menu-list {
     position: fixed;
     top: 25vh;
     list-style-position: inside;
+    color: white;
 }
 
 h1, h2, h3 {
-    color: #E6770B;
+    color: white;
     font-size: 3em;
 }
 
 a {
-    color: #E6770B;
+    color: inherit;
 }
 
 pre {
     white-space: pre-wrap;
     text-indent: 3em hanging each-line;
     text-align: left;
-    background-color: #52D053;
+    background-color: #E6770B;
     font-variant: normal;
     font-size: 15px;
-    color: #525252;
+    color: black;
     padding: 10px;
     border-radius: 10px;
 }
 
 #inline-bash {
-    background-color: #52D053;
+    background-color: #E6770B;
     font-variant: normal;
     font-size: large;
-    color: #525252;
+    color: black;
     padding: 0px 3px;
     border-radius: 3px;
 }
