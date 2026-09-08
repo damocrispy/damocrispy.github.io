@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpine LXC</title>
+    <link rel="stylesheet" href="eva01.css">
+</head>
+
+<body>
+    <div id="buffer">
+        <img src="./images/eva01.jpg" title="Unit 01">
+        <ul class="menu-list">
+            <h1>Pages</h1>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./alpine_lxc.html">Alpine LXC</a></li>
+            <li><a href="./proxmox.html">Proxmox</a></li>
+            <li><a href="./bastion.html">Bastion</a></li>
+            <li><a href="./pihole.html">Pihole</a></li>
+            <li><a href="./about.html">About</a></li>
+        </ul>
+    </div>
+    <div id="section">
+        <div id="banner">ALPINE LXC</div>
+        <div id="content">
+            This is the creation and basic setup of a Linux container running Alpine linux on Proxmox. I've used this a
+            few times.
+            Rather than have it in every page that uses it, I'll just link back to this. This assumes the Bastion is
+            already up and running.
+
+            <h1>Create container</h1>
+            <pre><code id="language-bash">pveam available --section system    # List available container templates
+pveam download local alpine-3.23-default_20260116_amd64.tar.xz    # Download Alpine container template
+pveam list local      # Verify template has been downloaded
+pct create 100 local:vztmpl/alpine-3.23-default_20260116_amd64.tar.xz \
+--hostname [hostname] \
+--memory 64 \
+--cores 1 \
+--rootfs local-lvm:1 \
+--net0 name=eth0,bridge=vmbr0,gw=192.168.1.1,ip=[static IP]/24 \
+--ostype alpine \
+--unprivileged 1
+pct set 100 --onboot 1
+pct start 100
+pct enter 100
+apk update
+apk upgrade</code></pre>
+
+            <h1>Enable automatic updates</h1>
+            <pre><code id="language-bash">crontab -e</code></pre>
+            Add the line:
+            <pre><code id="language-bash">0    2    *    *    *    apk update &amp;&amp; apk upgrade</code></pre>
+
+            <h1>Install + configure SSH server</h1>
+            <pre><code id="language-bash">apk add openssh
+rc-service sshd start
+rc-update add sshd  # Set to start on reboot</code></pre>
+            <p>Disable root login.
+            <pre><code id="language-bash">vi /etc/ssh/sshd_config</code></pre>
+            Change <code id="inline-bash">#PermitRootLogin prohibit-password</code>
+            to <code id="inline-bash">PermitRootLogin no</code>
+            </p>
+            <p>Create/configure new user.
+                <a
+                    href="https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user">https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user</a>
+
+            <pre><code id="language-bash">setup-user -a damo # Creates a locked user
+grep damo /etc/passwd
+# damo:x:1000:1000::/home/damo:/bin/bash    # Check if shell is bash or ash
+apk add shadow
+chsh -s /bin/ash damo
+grep damo /etc/passwd
+# damo:x:1000:1000::/home/damo:/bin/ash # Fixed!
+passwd damo # Set a password and unlock user
+su - damo
+doas pwd
+# doas: /etc/doas.d/20-wheel.conf is writable by group or other
+exit
+ls -l /etc/doas.d/20-wheel.conf 
+# -rw-rw-r--    1 root     root            22 Jul  4 13:17 /etc/doas.d/20-wheel.conf
+chmod 640 /etc/doas.d/20-wheel.conf 
+ls -l /etc/doas.d/20-wheel.conf 
+# -rw-r-----    1 root     root            22 Jul  4 13:17 /etc/doas.d/20-wheel.conf
+su - damo
+doas pwd
+# doas (damo@bastion) password: 
+/home/damo
+</code></pre>
+            </p>
+            <p>Configure ssh.
+                Create key pair on dev machine <code id="inline-bash">ssh-keygen -t ed25519</code>.
+                Then on new container:
+            <pre><code id="language-bash">mkdir -p /home/damo/.ssh
+chmod 700 /home/damo/.ssh/
+echo &quot;ssh-ed25519 XXX damo@thinkpad&quot; &gt; /home/damo/.ssh/authorized_keys
+chmod 600 /home/damo/.ssh/authorized_keys 
+</code></pre>
+            </p>
+            <h1>Configure firewall</h1>
+            <p>Install <code id="inline-bash">iptables</code> and create rules to allow SSH connections from the Bastion
+                only.
+            <pre><code id="language-bash">apk add iptables
+rc-update add iptables  # Set to start on reboot
+iptables -A INPUT -p tcp --dport 22 -s 192.168.1.14 -j ACCEPT
+iptables -A INPUT -p tcp --dport 22 -j DROP
+rc-service iptables save    # Save rules to disk</code></pre>
+            </p>
+        </div>
+    </div>
+    <div id="buffer"></div>
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pi-hole</title>
+    <link rel="stylesheet" href="eva01.css">
+</head>
+
+<body>
+    <div id="buffer">
+        <ul class="menu-list">
+            <h1>Pages</h1>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./alpine_lxc.html">Alpine LXC</a></li>
+            <li><a href="./proxmox.html">Proxmox</a></li>
+            <li><a href="./bastion.html">Bastion</a></li>
+            <li><a href="./pihole.html">Pihole</a></li>
+            <li><a href="./about.html">About</a></li>
+        </ul>
+    </div>
+    <div id="section">
+        <div id="banner">PI-HOLE</div>
+        <div id="content">
+            <p>Guides:
+            <ul class="body-list">
+                <li><a href="https://mark.himsley.org/blog/2025/11/22/pihole-lxc-Debian-Trixi/">Trixie</a></li>
+                <li><a href="https://www.virtualizationhowto.com/2023/04/how-to-install-pi-hole-on-proxmox/">Ubuntu</a>
+                </li>
+                <li><a href="https://kb.shells.com/tutorials/Alpine_Linux_Latest/Pi-hole/">Alpine</a>
+                </li>
+            </ul>
+            <a href="https://docs.pi-hole.net/main/prerequisites/">Pihole requirements</a></p>
+            
+<h1>Firewall rules for Pi-hole</h1>
+<p>Add the <code>iptables</code> rules.
+Firewall rules, straight from the <a href="https://docs.pi-hole.net/main/prerequisites/">Pi-hole docs</a>.</p>
+<pre><code class="language-bash">$ iptables -I INPUT 1 -s 192.168.1.0/24 -p tcp -m tcp --dport 80 -j ACCEPT
+$ iptables -I INPUT 1 -s 192.168.1.0/24 -p tcp -m tcp --dport 443 -j ACCEPT
+$ iptables -I INPUT 1 -s 192.168.1.0/24 -p tcp -m tcp --dport 53 -j ACCEPT
+$ iptables -I INPUT 1 -s 192.168.1.0/24 -p udp -m udp --dport 53 -j ACCEPT
+$ iptables -I INPUT 1 -s 127.0.0.0/8 -p tcp -m tcp --dport 53 -j ACCEPT
+$ iptables -I INPUT 1 -s 127.0.0.0/8 -p udp -m udp --dport 53 -j ACCEPT
+$ iptables -I INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+$ rc-service iptables save
+
+# The rules below are in the Pi-hole docs but are only needed if using Pi-hope from DHCP, which I'm not.
+# iptables -I INPUT 1 -p udp --dport 67:68 --sport 67:68 -j ACCEPT
+# iptables -I INPUT 1 -p udp --dport 123 -j ACCEPT
+</code></pre>
+            Pi-hole was a bit of an ordeal. My notes show four attempts to get it up and running.<br>
+            First the official install script which appeared to execute just fine but gave an error when I tried to
+            update the
+        </div>
+    </div>
+    <div id="buffer"></div>
+</body>
+
+</html>

@@ -67,3 +67,9 @@ h1, h2, h3 {
 a {
     color: red;
 }
+
+img {
+    width: 100%;
+    position: sticky;
+    top: 0;
+}

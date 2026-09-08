@@ -39,8 +39,8 @@ body {
     -webkit-text-stroke: 5px deepskyblue;
     text-align: center;
     font-family: "Spicy Sale";
-    font-size: 10vw;
-    padding: 5vw;
+    font-size: 8vw;
+    padding: 2vw;
 }
 
 #content {
@@ -64,7 +64,7 @@ h2 {
     color: deeppink;
 }
 
-#menu h1 {
+.menu-list h1 {
     font-family: "Spicy Sale";
     color: deeppink;
 }
