@@ -28,7 +28,7 @@
                 a few times. Rather than have it in every page that uses it, I'll just link back to this. This assumes
                 the Bastion is already up and running.</p>
 
-            <h1>Create container</h1>
+            <h2>Create container</h2>
             <pre><code id="language-bash">pveam available --section system    # List available container templates
 pveam download local alpine-3.23-default_20260116_amd64.tar.xz    # Download Alpine container template
 pveam list local      # Verify template has been downloaded
@@ -46,12 +46,12 @@ pct enter 100
 apk update
 apk upgrade</code></pre>
 
-            <h1>Enable automatic updates</h1>
+            <h2>Enable automatic updates</h2>
             <pre><code id="language-bash">crontab -e</code></pre>
             Add the line:
             <pre><code id="language-bash">0    2    *    *    *    apk update &amp;&amp; apk upgrade</code></pre>
 
-            <h1>Install + configure SSH server</h1>
+            <h2>Install + configure SSH server</h2>
             <pre><code id="language-bash">apk add openssh
 rc-service sshd start
 rc-update add sshd  # Set to start on reboot</code></pre>
@@ -96,7 +96,7 @@ echo &quot;ssh-ed25519 XXX damo@thinkpad&quot; &gt; /home/damo/.ssh/authorized_k
 chmod 600 /home/damo/.ssh/authorized_keys 
 </code></pre>
             </p>
-            <h1>Configure firewall</h1>
+            <h2>Configure firewall</h2>
             <p>Install <code id="inline-bash">iptables</code> and create rules to allow SSH connections from the Bastion
                 only.
             <pre><code id="language-bash">apk add iptables

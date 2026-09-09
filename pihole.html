@@ -24,6 +24,11 @@
     <div id="section">
         <div id="banner">PI-HOLE</div>
         <div id="content">
+            <p>This was a pain to get up and running, but I did it. The main reason is that I was installing it on
+                Alpine linux which is a very stripped back distro. A blessing and a curse. I've summarised my various
+                attempts to get it working here. This is not particularly thorough. No need to go into depth with things
+                that didn't work. Believe me though, this was going on for a few days.
+            </p>
             <p>Guides:
             <ul class="body-list">
                 <li><a href="https://mark.himsley.org/blog/2025/11/22/pihole-lxc-Debian-Trixi/">Trixie</a></li>
@@ -33,11 +38,16 @@
                 </li>
             </ul>
             <a href="https://docs.pi-hole.net/main/prerequisites/">Pihole requirements</a></p>
-            
-<h1>Firewall rules for Pi-hole</h1>
-<p>Add the <code>iptables</code> rules.
-Firewall rules, straight from the <a href="https://docs.pi-hole.net/main/prerequisites/">Pi-hole docs</a>.</p>
-<pre><code class="language-bash">$ iptables -I INPUT 1 -s 192.168.1.0/24 -p tcp -m tcp --dport 80 -j ACCEPT
+
+            <h2>Create Alpine LXC</h2>
+            <p>First thing is to create a linux container running Alpine linux. This is just going to run a single
+                application so it doesn't need anything with a big footprint. I've documented my process for ding this
+                over <a href="./alpine_lxc.html">here</a>.</p>
+            <h2>Firewall rules for Pi-hole</h2>
+            <p>Add the <code>iptables</code> rules.
+                Firewall rules, straight from the <a href="https://docs.pi-hole.net/main/prerequisites/">Pi-hole
+                    docs</a>.</p>
+            <pre><code id="language-bash">$ iptables -I INPUT 1 -s 192.168.1.0/24 -p tcp -m tcp --dport 80 -j ACCEPT
 $ iptables -I INPUT 1 -s 192.168.1.0/24 -p tcp -m tcp --dport 443 -j ACCEPT
 $ iptables -I INPUT 1 -s 192.168.1.0/24 -p tcp -m tcp --dport 53 -j ACCEPT
 $ iptables -I INPUT 1 -s 192.168.1.0/24 -p udp -m udp --dport 53 -j ACCEPT
@@ -50,9 +60,98 @@ $ rc-service iptables save
 # iptables -I INPUT 1 -p udp --dport 67:68 --sport 67:68 -j ACCEPT
 # iptables -I INPUT 1 -p udp --dport 123 -j ACCEPT
 </code></pre>
-            Pi-hole was a bit of an ordeal. My notes show four attempts to get it up and running.<br>
-            First the official install script which appeared to execute just fine but gave an error when I tried to
-            update the
+            <p>Pi-hole was a bit of an ordeal. My notes show four attempts to get it up and running.</p>
+            <h2>Attempt #1: Official Pi-hole install script</h2>
+            <p>I ran the official install script which appeared to execute just fine but gave an error when I tried to
+                update the the application itself (<code id="inline-bash">/usr/local/bin/pihole -up</code>). This gave
+                the error <code id="inline-bash">Web Admin repo is missing from system!</code> and suggested I
+                re-run the install script. I tried to repair this (<code
+                    id="inline-bash">/usr/local/bin/pihole -r</code>) and was told <code
+                    id="inline-bash">Unable to reset /usr/share/pihole/admin-web/admin/, exiting installer</code>. I
+                re-ran the installer, which was fine. Re-ran the update, got the same error.</p>
+            <p><a
+                    href="https://discourse.pi-hole.net/t/error-web-admin-repo-is-missing-from-system-unable-to-upgrade-to-release-5-16-1/62034">Tried
+                    this.</a> It didn’t work.</p>
+            <pre><code id="language-bash">sudo rm -rf /var/www/html/admin
+sudo git clone https://github.com/pi-hole/AdminLTE.git /var/www/html/admin
+</code></pre>
+            <p><a href="https://discourse.pi-hole.net/t/pihole-wont-update-web-admin-repo-is-missing-from-system/83989">Tried
+                    this.</a> It didn’t work.</p>
+            <pre><code id="language-bash">sudo rm -rf /var/www/html/admin
+sudo git clone https://github.com/pi-hole/web.git /var/www/html/admin
+</code></pre>
+            <p>Searching came up empty.</p>
+            <pre><code id="language-bash">pihole uninstall
+</code></pre>
+            </p>
+            <h2>Attempt #2: Package from testing repo</h2>
+            <p><a href="https://donluca.theclassicgamer.net/pi-hole-is-back-on-alpine-linux/">Found here</a>. Someone
+                ported
+                Pi-hole to Alpine linux but as of now, <a
+                    href="https://pkgs.alpinelinux.org/packages?name=*pihole*&branch=edge&repo=&arch=x86_64&origin=&flagged=&maintainer=">it's
+                    still in the testing repo</a>.</p>
+            <p>Installed via Alpine package manager but running <code id="inline-bash">pihole status</code> gave an
+                error <code id="inline-bash">ss: command not found</code>. This lives in iproute2, I installed that,
+                re-ran the status check, everything looked good.</p>
+            <p>Checked the application in the rowser and was told to "Update the list of ad-serving domains". I ran
+                <code id="inline-bash">pihole -g</code>, <a
+                    href="https://docs.pi-hole.net/main/pihole-command/#gravity">which should update the blocklists</a>.
+                This gave me a DNS error. I got nowhere trying to sort this one out either.
+            </p>
+            <pre><code id="language-bash">apk del pihole
+</code></pre>
+            <h2>Attempt #3: Install script modified for Alpine</h2>
+            <p>I came across <a href="alpine">a version of the official install script</a> that had been modified to run
+                on Alpine. Long story short, it didn't work.</p>
+            <pre><code id="language-bash">pihole uninstall
+</code></pre>
+            <h2>Attempt #4: Re-try the official install script</h2>
+            <p>Nothing was working. I had spent a lot of time on this. I was getting desperate (I ran a scipt I found on
+                github in Attempt #3 which will tell you how desperate I was). It was suggested on a forum that I stick
+                with the official install script. Sure may as well like.
+            </p>
+            <pre><code id="">curl -sSL https://install.pi-hole.net | bash</code></pre>
+            <p>This looked all good. It brought up the install interface that I had only seen in Attempt #3 and
+                tutorials. opening the app in the browser I'm told "Domains on list 93,156". Very nice. <code
+                    id="inline-bash">pihole -v</code> showed latest versions. <code id="inline-bash">pihole -g</code>
+                ran just fine. <code id="inline-bash">pihole -up</code> showed everything up to date. Alright. It's
+                running.</p>
+            <h2>Making it actually work</h2>
+            <p>I'm not going to go through the troubleshooting here but there are a few important points I learned. To
+                test, I used some arbitrary websites and <a href="https://fuzzthepiguy.tech/adtest/">this</a>. For the
+                adtest website, I had to turn off all privacy extensions and features in the browser. I tested with
+                Brave and Firefox. I had to do this to actually see some ads in the first place before testing if
+                Pi-hole was blocking them.</p>
+            <h3>VPN</h3>
+            <p>I use NordVPN (currently). I have this set up on each device - laptop, phone. If I'm connected to the
+                VPN, DNS requests are routed to the VPN provider's DNS service - the VPN app overwrites <code
+                    id="inline-bash">/etc/resolv.conf</code>. If I'm on the VPN, the Pi-hole is ignored. To test the
+                Pi-hole from the laptop, I need to disconnect from the VPN. So I did, for the duration of testing.
+            </p>
+            <h3>DHCP</h3>
+            <p>By default, the router sets the DNS server IP. The local machine will get the address from the router and
+                make the query. I can set the DNS IP on the local machine (laptop) and on the router. Below are some
+                experiments changeing these values and the outcome of each.</p>
+            <p>Router DNS: auto<br>
+                Local machine DNS: 192.168.1.15 (pihole)<br>
+                Result: dashoard show queries received, queries blocked<br>
+                Conclusion: Pi-hole works, but only on one machine.</p>
+            <p>Router DNS: 192.168.1.15 (pihole)<br>
+                Local machine DNS: 192.168.1.1 (router)<br>
+                Result: "page not found" in browser, `curl: (6) Could not resolve host: google.com`<br>
+                Conclusion: Router won't use pihole</p>
+            <p>Router DNS: 8.8.8.8 (google)<br>
+                Local machine DNS: 192.168.1.1 (router)<br>
+                Result: Pages load.<br>
+                Conclusion: Router will use any other custom DNS.</p>
+            <p>The trick in the end was to turn on DHCP on the Pi-hole and turn it off on the router. Turns out, and
+                this was new to me, the DHCP server also hands out the DNS address. Just let the Pi-hole take care of
+                everything and it'll all be ok.</p>
+            <p>The next question is how to use the VPN and the Pi-hole. Makes sense to have the VPN configured at the
+                router level then all traffic will go through the VPN but the Pi-hole will still be filtering the DNS
+                queries. This would be for everything on the network. The problem is that the ISP standard issue router
+                I'm using only has options for older VPN protocols and not the one that NordVPN uses. So now I need to
+                buy a router and ask the ISP if I can use it.</p>
         </div>
     </div>
     <div id="buffer"></div>
