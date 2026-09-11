@@ -30,7 +30,7 @@
         then you can get to where you want to go. Thus you'll need two keys to
         get to the target. It also means the bastion has to be watertight.
 
-        <h1>Create container</h1>
+        <h2>Create container</h2>
 
         The bastion is going to run in a small Alpine container within Proxmox.
         The only thing running here will be OpenSSH, so it's not going to need
@@ -58,22 +58,22 @@ $ pct enter 100
 $ apk update
 $ apk upgrade</code></pre>
 
-        <h1>Enable automatic updates</h1>
+        <h2>Enable automatic updates</h2>
         <pre><code id="language-bash">crontab -e</code></pre>
         Add the line:
         <pre><code id="language-bash">0    2    *    *    *    apk update &amp;&amp; apk upgrade</code></pre>
 
-        <h1>Install SSH server</h1>
+        <h2>Install SSH server</h2>
         <pre><code id="language-bash">$ pct exec 100 -- apk add openssh
 $ pct exec 100 -- rc-service sshd start</code></pre>
 
-        <h1>Disable root login</h1>
+        <h2>Disable root login</h2>
         <pre><code id="language-bash">$ vi /etc/ssh/sshd_config</code></pre>
         Change
         <code id="inline-bash">#PermitRootLogin prohibit-password</code> to
         <code id="inline-bash">PermitRootLogin no</code>
 
-        <h1>Create/configure <code id="header-bash">admin</code> user</h1>
+        <h2>Create/configure <code id="header-bash">admin</code> user</h2>
         <a href="https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user"
           >https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user</a
         >
@@ -101,7 +101,7 @@ $ doas (admin@bastion) password:
 /home/admin
 </code></pre>
 
-        <h1>Configure ssh</h1>
+        <h2>Configure ssh</h2>
         Create key pair on dev machine
         <code id="inline-bash">ssh-keygen -t ed25519</code>. Then on bastion:
         <pre><code id="language-bash">mkdir -p /home/admin/.ssh
@@ -127,7 +127,7 @@ chmod 600 /home/admin/.ssh/authorized_keys
             >
           </li>
         </ul>
-        <h1>Configure firewall</h1>
+        <h2>Configure firewall</h2>
         <code id="inline-bash">doas apk add ufw</code>
         Follow config / rule creation as per linked guide.
         <a href="https://wiki.alpinelinux.org/wiki/Unbladelicated_Firewall"
@@ -160,7 +160,7 @@ To                         Action      From
         <pre><code id="language-bash">doas ufw enable     # enable the firewall
 doas rc-update add ufw    # add UFW init scripts
 </code></pre>
-        <h1>Configure fail2ban</h1>
+        <h2>Configure fail2ban</h2>
         <code id="inline-bash">doas apk add fail2ban</code>
         Follow config / rule creation as per linked guide. EXCEPT The guide uses
         <code id="inline-bash">logpath = /var/log/auth.log</code>. Alpine does
@@ -199,11 +199,11 @@ fail2ban                [  started  ]
           >doas rc-update add fail2ban # start fail2ban server on boot</code
         >
 
-        <h1>ProxyJump</h1>
+        <h2>ProxyJump</h2>
         On dev machine, edit <code id="inline-bash">~/.ssh/config</code>. Add in
         <code id="inline-bash">ProxyJump bastion</code> to the config of each
         host on the proxmox server.
-        <h1>Lock down hosts</h1>
+        <h2>Lock down hosts</h2>
         Again, following the guide.
         <ul>
           <li>
@@ -225,13 +225,13 @@ iptables -A INPUT -p tcp --dport 22 -j DROP
         the command <code id="inline-bash">iptables-save</code> must be used.
         Can also use <code id="inline-bash">netfilter-persistent save</code>.
         <hr />
-        <h1>Problems</h1>
-        <h1>
+        <h2>Problems</h2>
+        <h3>
           <code id="inline-bash"
             ># Enable automatic security updates — this is non-negotiable for an
             internet-facing host</code
           >
-        </h1>
+        </h3>
         <a
           href="https://blog.bythewood.me/posts/minimal-automated-updates-for-alpine-linux/"
           >Different for Alpine</a
@@ -261,7 +261,7 @@ iptables -A INPUT -p tcp --dport 22 -j DROP
 0	5	1	*	*	run-parts /etc/periodic/monthly
 0	2	*	*	*	apk update && apk upgrade
 </code></pre>
-        <h1>“Create a dedicated admin user and disable root login”</h1>
+        <h3>“Create a dedicated admin user and disable root login”</h3>
         <a href="https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user"
           >Alpine uses <code id="inline-bash">adduser</code> instead of
           <code id="inline-bash">useradd</code></a
@@ -322,7 +322,7 @@ permit nopass :wheel
             (success).
           </li>
         </ul>
-        <h1>“Configuring fail2ban”</h1>
+        <h3>“Configuring fail2ban”</h3>
         <pre><code id="language-bash">/ # rc-service fail2ban start
 * Starting fail2ban ...
 2026-07-04 14:55:32,481 fail2ban                [1545]: ERROR   Failed during configuration: Have not found any log file for sshd jail

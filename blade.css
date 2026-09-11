@@ -61,8 +61,12 @@ ul.menu-list {
 h1,h2,h3 {
     color: #1ee5d3;
     text-shadow: 0 0 30px;
-    font-size: 3em;
+    /* font-size: 3em; */
     /* font-weight: 300; */
+}
+
+h1 {
+    font-size: 3em;
 }
 
 a {
