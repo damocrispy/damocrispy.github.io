@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "Courier Prime";
+    src: url('./font/CourierPrime-Regular.ttf') format("truetype");
+}
+
 html,body {
     margin: 0;
     padding: 0;
@@ -70,10 +75,14 @@ pre {
     text-align: left;
     background-color: #0272a9;
     font-variant: normal;
-    font-size: 15px;
+    font-size: large;
     color: #1ee5d3;
     padding: 10px;
     border-radius: 10px;
+}
+
+code {
+    font-family: "Courier Prime";
 }
 
 #inline-bash {

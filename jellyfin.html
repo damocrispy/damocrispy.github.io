@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jellyfin</title>
+    <link rel="stylesheet" href="roots.css">
+</head>
+
+<body>
+    <div id="buffer">
+        <img src="./images/roots.png" title="All these moments...">
+        <ul class="menu-list">
+            <h1>Pages</h1>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./proxmox.html">Proxmox</a></li>
+            <li><a href="./bastion.html">Bastion</a></li>
+            <li><a href="./alpine_lxc.html">Alpine LXC</a></li>
+            <li><a href="./pihole.html">Pi-hole</a></li>
+            <li><a href="./jellyfin.html">Jellyfin</a></li>
+            <li><a href="./about.html">About</a></li>
+        </ul>
+    </div>
+    <div id="section">
+        <div id="banner">JELLYFIN</div>
+        <div id="content">
+            <h2>Guides:</h2>
+            <ul>
+                <li><a href="http://youtube.com/watch?v=tWumbDlbzLY">http://youtube.com/watch?v=tWumbDlbzLY</a></li>
+                <li><a
+                        href="https://www.xda-developers.com/jellyfin-on-proxmox-guide/">https://www.xda-developers.com/jellyfin-on-proxmox-guide/</a>
+                </li>
+                <li><a
+                        href="https://www.wundertech.net/installing-jellyfin-on-proxmox/">https://www.wundertech.net/installing-jellyfin-on-proxmox/</a>
+                </li>
+                <li><a
+                        href="https://jellywatch.app/blog/jellyfin-proxmox-lxc-vm-setup-gpu-passthrough-2026">https://jellywatch.app/blog/jellyfin-proxmox-lxc-vm-setup-gpu-passthrough-2026</a>
+                </li>
+            </ul>
+            <h2>Create LXC Container</h2>
+            <p>Go <a href="./alpine_lxc.html">here</a>. Do that. EXCEPT. Use a Debian image, not Alpine. This container
+                will have a bit more heavy lifting to do so I gave it a meatier distro. Keep in mind the commands from
+                the Alpine LXC page should be translated into Debian - i.e. <code id="inline-bash">apk update</code> ->
+                <code id="inline-bash">apt update</code> and so on. Could be interesting to try it with alpine and see
+                how it works. Come back when it's done.
+            </p>
+            <pre><code id="language-bash">pveam available --section system | grep debian
+pveam download local vztmpl/debian-13-standard_13.1-2_amd64.tar.zst
+pct create 102 local:vztmpl/debian-13-standard_13.1-2_amd64.tar.zst \
+    --hostname jellyfin \
+    --memory 4096 \
+    --cores 4 \
+    --rootfs local-lvm:100 \
+    --net0 name=eth0,bridge=vmbr0,gw=192.168.1.1,ip=192.168.1.16/24 \
+    --ostype debian \
+    --unprivileged 0</code></pre>
+            <p>Getting this far, I noticed an issue with logging in and changing users being very slow. A warning
+                received creating the container suggested this may be a problem: <code id="inline-bash">WARN: Systemd 257 detected. You may
+need to enable nesting.</code> <a
+                    href="https://forum.proxmox.com/threads/lxc-debian-13-with-nesting-disabled-no-console.173418/">Discussed
+                    here</a>. "Debian (like most distros nowadays) uses a modern systemd version that needs nesting."
+                Privileged + nesting <a
+                    href="https://forum.proxmox.com/threads/ubuntu-24-04-unsupported-ubuntu-version-24-04.146454/#post-662118">is
+                    not recommended</a>. So, let's make this unprivileged for now. There may be issues later with
+                transcoding but we'll jump off that bridge when we come to it.</p>
+            <p><a href="https://davidwhittington.github.io/proxmox/pct-container-management.html#create">
+                    Interestingly
+                </a>:
+            <blockquote>Always use <code id="inline-bash">--unprivileged 1</code> unless you have a specific reason not
+                to. Unprivileged containers run as a non-root user on the host, significantly limiting the damage from a
+                container escape.</blockquote>
+            </p>
+            <h2>Change to Unprivileged</h2>
+            <p><a href="https://bobcares.com/blog/change-lxc-from-unprivileged-back-to-privileged/">Described here.</a>
+            </p>
+            <pre><code class="language-bash">pct stop 102 # Stop
+vzdump 102 --dumpdir /var/lib/vz/dump # Backup
+# INFO: starting new backup job: vzdump 102 --dumpdir /var/lib/vz/dump
+# INFO: Starting Backup of VM 102 (lxc)
+# INFO: Backup started at 2026-07-29 13:48:14
+# INFO: status = stopped
+# INFO: backup mode: stop
+# INFO: ionice priority: 7
+# INFO: CT Name: jellyfin
+# INFO: including mount point rootfs ('/') in backup
+# INFO: creating vzdump archive '/var/lib/vz/dump/vzdump-lxc-102-2026_07_29-13_48_14.tar'
+# INFO: Total bytes written: 732723200 (699MiB, 89MiB/s)
+# INFO: archive file size: 698MB
+# INFO: Finished Backup of VM 102 (00:00:08)
+# INFO: Backup finished at 2026-07-29 13:48:22
+# INFO: Backup job finished successfully
+# INFO: notified via target `mail-to-root`
+pct destroy 102 # Destroy
+#  Logical volume &quot;vm-102-disk-0&quot; successfully removed.
+pct restore 102 /var/lib/vz/dump/vzdump-lxc-102-2026_07_29-13_48_14.tar --storage local-lvm --unprivileged 1 # Restore as unprivileged
+# recovering backed-up configuration from '/var/lib/vz/dump/vzdump-lxc-102-2026_07_29-13_48_14.tar'
+#   Logical volume &quot;vm-102-disk-0&quot; created.
+#   Logical volume pve/vm-102-disk-0 changed.
+# Creating filesystem with 26214400 4k blocks and 6553600 inodes
+# Filesystem UUID: 452ee4ae-646b-496e-abb6-1de552fa8c8d
+# Superblock backups stored on blocks: 
+# 	32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208, 
+# 	4096000, 7962624, 11239424, 20480000, 23887872
+# restoring '/var/lib/vz/dump/vzdump-lxc-102-2026_07_29-13_48_14.tar' now..
+# extracting archive '/var/lib/vz/dump/vzdump-lxc-102-2026_07_29-13_48_14.tar'
+# Total bytes read: 732723200 (699MiB, 677MiB/s)
+# merging backed-up and given configuration..
+pct start 102 # Start
+# WARN: Systemd 257 detected. You may need to enable nesting. # Still have this warning
+# Task finished with 1 warning(s)!
+</code></pre>
+            <h2>Enable Nesting</h2>
+            <p>In Proxmox UI, click the container &gt; Options &gt; Features. This will say “none”. You can change it
+                here But you'll feel smarter if you use the command line.
+                <a href="https://pve.proxmox.com/pve-docs/pct.1.html">From here.</a>
+            </p>
+            <pre><code class="language-bash">pct set 102 --features nesting=1
+</code></pre>
+            <p>Check the UI again and it'll say “nesting=1”. Does it work?</p>
+            <pre><code class="language-bash">pct stop 102
+pct start 102
+</code></pre>
+            <p>No warning about Systemd 257 this time. Log in. Change to root. No hangs.</p>
+            <h2>Install Jellyfin</h2>
+            <pre><code class="language-bash">apt install curl
+curl -s https://repo.jellyfin.org/install-debuntu.sh | bash
+systemctl enable jellyfin
+systemctl status jellyfin
+</code></pre>
+            <h2>Firewall rules</h2>
+            <p>
+                I'm using <code id="inline-bash">nftables</code> to manage firewall rules. Install and
+                enable it so it comes up after reboot.
+            </p>
+            <pre><code class="language-bash">apt install nftables
+systemctl enable nftables
+</code></pre>
+            <p>
+                Give it some rules to block everything except ssh and Jellyfin and some
+                other essentials.
+            </p>
+            <pre><code class="language-bash">nft flush chain inet filter input # Start over
+nft add chain inet filter input &quot;{ type filter hook input priority filter; policy accept; }&quot; # New input chain
+nft add rule inet filter input iifname &quot;lo&quot; accept # Loopback
+nft add rule inet filter input ct state established,related accept
+nft add rule inet filter input ip protocol icmp limit rate 1/second burst 5 packets accept
+nft add rule inet filter input tcp dport { 22, 80 } accept
+nft add rule inet filter input ip saddr 192.168.1.0/24 tcp dport 8096 ct state new accept
+nft add rule inet filter input ip saddr 192.168.1.0/24 tcp dport 8920 ct state new accept
+nft add rule inet filter input drop
+</code></pre>
+            <p>
+                Check in browser: <code id="inline-bash">192.168.1.16:8096</code>. Now this needs to be
+                saved to a file to survive reboot.
+            </p>
+            <pre><code class="language-bash">{
+    printf '#!/usr/sbin/nft -f\n'
+    printf '\n'
+    printf 'flush ruleset'
+    printf '\n'
+    nft list ruleset
+} &gt; /etc/nftables.conf
+</code></pre>
+            <p>
+                Reboot to test. Create a directory for media e.g. <code id="inline-bash">/media/movies</code>. If this
+                is in the user home directory, Jellyfin won't be able to see it. Copy media from dev machine to the
+                Jellyfin LXC. I tried <code id="inline-bash">scp</code> a few times but it stalled and took out SSH.
+                Then I used <code id="inline-bash">rsync</code>. This has to be installed on the LXC.
+            </p>
+            <pre><code class="language-bash">rsync -avz --progress * jellyfin:/home/damo/Movies</code></pre>
+            <p>
+                In the browser, create a library and add the directory where the files are. The client will not be able
+                to see any files unless
+                <a href="https://forum.jellyfin.org/t-solved-ubuntu-user-permissions?pid=39958#pid39958">the directory
+                    is added to the jellyfin group and the user is made
+                    owner.</a>
+            </p>
+            <pre><code class="language-bash">chown damo:jellyfin /media/movies  
+chmod 750 /media/movies
+</code></pre>
+<p>Now. Done.</p>
+        </div>
+    </div>
+    <div id="buffer"></div>
+</body>
+
+</html>
