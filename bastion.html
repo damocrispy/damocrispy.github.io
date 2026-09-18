@@ -44,19 +44,19 @@
           href="https://weblog.lkiesow.de/20220223-proxmox-test-machine-self-servic/ssh-jumphost-to-internal-network.html"
           >Also this.</a
         >
-        <pre><code id="language-bash">$ pct create 100 local:vztmpl/alpine-3.23-default_20260116_amd64.tar.xz \
---hostname bastion \
---memory 64 \
---cores 1 \
---rootfs local-lvm:1 \
---net0 name=eth0,bridge=vmbr0,gw=192.168.1.1,ip=192.168.1.14/24 \
---ostype alpine \
---unprivileged 1
-$ pct set 100 --onboot 1
-$ pct start 100
-$ pct enter 100
-$ apk update
-$ apk upgrade</code></pre>
+        <pre><code id="language-bash">pct create 100 local:vztmpl/alpine-3.23-default_20260116_amd64.tar.xz \
+    --hostname bastion \
+    --memory 64 \
+    --cores 1 \
+    --rootfs local-lvm:1 \
+    --net0 name=eth0,bridge=vmbr0,gw=192.168.1.1,ip=192.168.1.14/24 \
+    --ostype alpine \
+    --unprivileged 1
+pct set 100 --onboot 1
+pct start 100
+pct enter 100
+apk update
+apk upgrade</code></pre>
 
         <h2>Enable automatic updates</h2>
         <pre><code id="language-bash">crontab -e</code></pre>
@@ -64,11 +64,11 @@ $ apk upgrade</code></pre>
         <pre><code id="language-bash">0    2    *    *    *    apk update &amp;&amp; apk upgrade</code></pre>
 
         <h2>Install SSH server</h2>
-        <pre><code id="language-bash">$ pct exec 100 -- apk add openssh
-$ pct exec 100 -- rc-service sshd start</code></pre>
+        <pre><code id="language-bash">pct exec 100 -- apk add openssh
+pct exec 100 -- rc-service sshd start</code></pre>
 
         <h2>Disable root login</h2>
-        <pre><code id="language-bash">$ vi /etc/ssh/sshd_config</code></pre>
+        <pre><code id="language-bash">vi /etc/ssh/sshd_config</code></pre>
         Change
         <code id="inline-bash">#PermitRootLogin prohibit-password</code> to
         <code id="inline-bash">PermitRootLogin no</code>
@@ -78,27 +78,27 @@ $ pct exec 100 -- rc-service sshd start</code></pre>
           >https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user</a
         >
 
-        <pre><code id="language-bash">$ setup-user -a admin # Creates a locked admin user
-$ grep admin /etc/passwd
-admin:x:1000:1000::/home/admin:/bin/bash # Alpine uses ash not bash
-$ apk add shadow
-$ chsh -s /bin/ash admin
-$ grep admin /etc/passwd
-admin:x:1000:1000::/home/admin:/bin/ash # Fixed!
-$ passwd admin # Set a password and unlock user
-$ su - admin
-bastion:~$ doas pwd
-doas: /etc/doas.d/20-wheel.conf is writable by group or other
-bastion:~$ exit
-$ ls -l /etc/doas.d/20-wheel.conf 
--rw-rw-r--    1 root     root            22 Jul  4 13:17 /etc/doas.d/20-wheel.conf
-$ chmod 640 /etc/doas.d/20-wheel.conf 
-$ ls -l /etc/doas.d/20-wheel.conf 
--rw-r-----    1 root     root            22 Jul  4 13:17 /etc/doas.d/20-wheel.conf
-$ su - admin
-$ bastion:~$ doas pwd
-$ doas (admin@bastion) password: 
-/home/admin
+        <pre><code id="language-bash">setup-user -a admin # Creates a locked admin user
+grep admin /etc/passwd
+# admin:x:1000:1000::/home/admin:/bin/bash # Alpine uses ash not bash
+apk add shadow
+chsh -s /bin/ash admin
+grep admin /etc/passwd
+# admin:x:1000:1000::/home/admin:/bin/ash # Fixed!
+passwd admin # Set a password and unlock user
+su - admin
+doas pwd
+# doas: /etc/doas.d/20-wheel.conf is writable by group or other
+exit
+ls -l /etc/doas.d/20-wheel.conf 
+# -rw-rw-r--    1 root     root            22 Jul  4 13:17 /etc/doas.d/20-wheel.conf
+chmod 640 /etc/doas.d/20-wheel.conf 
+ls -l /etc/doas.d/20-wheel.conf 
+# -rw-r-----    1 root     root            22 Jul  4 13:17 /etc/doas.d/20-wheel.conf
+su - admin
+doas pwd
+# doas (admin@bastion) password: 
+# /home/admin
 </code></pre>
 
         <h2>Configure ssh</h2>
@@ -134,27 +134,27 @@ chmod 600 /home/admin/.ssh/authorized_keys
           >More info here.</a
         >
 
-        <pre><code id="language-bash">bastion:~$ doas ufw status verbose
-Status: active
-Logging: on (low)
-Default: deny (incoming), deny (outgoing), disabled (routed)
-New profiles: skip
-
-To                         Action      From
---                         ------      ----
-22/tcp                     ALLOW IN    Anywhere                  
-22/tcp (v6)                ALLOW IN    Anywhere (v6)             
-
-22/tcp                     ALLOW OUT   Anywhere                  
-53/udp                     ALLOW OUT   Anywhere                  
-80/tcp                     ALLOW OUT   Anywhere                  
-443/tcp                    ALLOW OUT   Anywhere                  
-123/udp                    ALLOW OUT   Anywhere                  
-22/tcp (v6)                ALLOW OUT   Anywhere (v6)             
-53/udp (v6)                ALLOW OUT   Anywhere (v6)             
-80/tcp (v6)                ALLOW OUT   Anywhere (v6)             
-443/tcp (v6)               ALLOW OUT   Anywhere (v6)             
-123/udp (v6)               ALLOW OUT   Anywhere (v6) 
+        <pre><code id="language-bash">doas ufw status verbose
+# Status: active
+# Logging: on (low)
+# Default: deny (incoming), deny (outgoing), disabled (routed)
+# New profiles: skip
+# 
+# To                         Action      From
+# --                         ------      ----
+# 22/tcp                     ALLOW IN    Anywhere                  
+# 22/tcp (v6)                ALLOW IN    Anywhere (v6)             
+# 
+# 22/tcp                     ALLOW OUT   Anywhere                  
+# 53/udp                     ALLOW OUT   Anywhere                  
+# 80/tcp                     ALLOW OUT   Anywhere                  
+# 443/tcp                    ALLOW OUT   Anywhere                  
+# 123/udp                    ALLOW OUT   Anywhere                  
+# 22/tcp (v6)                ALLOW OUT   Anywhere (v6)             
+# 53/udp (v6)                ALLOW OUT   Anywhere (v6)             
+# 80/tcp (v6)                ALLOW OUT   Anywhere (v6)             
+# 443/tcp (v6)               ALLOW OUT   Anywhere (v6)             
+# 123/udp (v6)               ALLOW OUT   Anywhere (v6) 
 </code></pre>
         After this has been installed run the following commands:
         <pre><code id="language-bash">doas ufw enable     # enable the firewall
