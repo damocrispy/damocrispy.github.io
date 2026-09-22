@@ -40,7 +40,7 @@ body {
 .banner {
     color: #1ee5d3;
     text-align: center;
-    font-size: max(72px, 12vw);
+    font-size: max(85px, 12vw);
     font-weight: bold;
     text-shadow: 0 0 30px;
     justify-content: center;
@@ -85,7 +85,8 @@ a {
 }
 
 pre {
-    white-space: pre-wrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
     text-indent: 3em hanging each-line;
     text-align: left;
     background-color: #0272a9;

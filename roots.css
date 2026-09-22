@@ -46,7 +46,7 @@ body {
     display: flex;
     color: #8C162C;
     text-align: center;
-    font-size: max(72px, 12vw);
+    font-size: max(85px, 12vw);
     font-weight: bold;
     justify-content: center;
     padding: 5vw 0 2vw 0;
@@ -92,7 +92,8 @@ a {
 }
 
 pre {
-    white-space: pre-wrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
     text-indent: 3em hanging each-line;
     text-align: left;
     background-color: #400E17;

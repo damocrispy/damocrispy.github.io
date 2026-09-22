@@ -43,7 +43,7 @@ body {
     width: 100%;
     background-color: black;
     font-family: 'Times New Roman', Times, serif;
-    font-size: max(72px, 15vw);
+    font-size: max(85px, 15vw);
     white-space: nowrap;
     color: white;
     justify-content: center;
@@ -93,7 +93,8 @@ a {
 }
 
 pre {
-    white-space: pre-wrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
     text-indent: 3em hanging each-line;
     text-align: left;
     background-color: #52D053;

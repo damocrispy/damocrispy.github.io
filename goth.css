@@ -41,7 +41,7 @@ body {
 .banner {
     text-align: center;
     font-family: "Olde English";
-    font-size: max(72px, 10vw);
+    font-size: max(85px, 10vw);
     justify-content: center;
     padding: 50px;
 }

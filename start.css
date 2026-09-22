@@ -45,7 +45,7 @@ body {
     color: red;
     text-align: center;
     font-family: "Misfits";
-    font-size: max(72px, 15vw);
+    font-size: max(85px, 15vw);
     /* padding: 2vw; */
 }
 
@@ -65,17 +65,14 @@ ul.menu-list {
     position: fixed;
     top: 25vh;
     list-style-position: inside;
+    padding: 3vw;
 }
 
 h1,h2 {
     font-family: "Misfits";
-    font-size: 4em;
+    font-size: 3em;
     font-weight: 100;
     color: red;
-}
-
-h1.menuhead {
-    font-size: 4vw;
 }
 
 a {
