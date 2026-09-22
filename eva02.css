@@ -8,6 +8,7 @@
     img { display: none; }
     .buffer { display: none; }
     .section { width: 100%; }
+    pre { white-space: normal; overflow-wrap: anywhere; }
 }
 
 html, body {

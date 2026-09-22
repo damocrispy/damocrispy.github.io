@@ -12,6 +12,7 @@
     img { display: none; }
     .buffer { display: none; }
     .section { width: 100%; }
+    pre { white-space: normal; overflow-wrap: anywhere; }
 }
 
 html,body {
@@ -92,8 +93,7 @@ a {
 }
 
 pre {
-    white-space: normal;
-    overflow-wrap: anywhere;
+    white-space: pre-wrap;
     text-indent: 3em hanging each-line;
     text-align: left;
     background-color: #400E17;
