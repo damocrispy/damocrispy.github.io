@@ -8,6 +8,12 @@
     src: url('./font/CourierPrime-Regular.ttf') format("truetype");
 }
 
+@media screen and (max-width: 600px) {
+    img { display: none; }
+    .buffer { display: none; }
+    .section { width: 100%; }
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -22,27 +28,28 @@ body {
     font-size: large;
 }
 
-#buffer {
+.buffer {
     width: 20%;
     background-color: black;
 }
 
-#section {
+.section {
     display: flex;
     flex-direction: column;
+    flex: 1;
     width: 60%;
     padding-bottom: 25%;
 }
 
-#banner {
+.banner {
     color: red;
     text-align: center;
     font-family: "Misfits";
-    font-size: 10vw;
-    padding: 2vw;
+    font-size: 15vw;
+    /* padding: 2vw; */
 }
 
-#content {
+.content {
     margin: 0 5vw 0 5vw;
     text-align: justify;
     text-justify: inter-word;
@@ -65,6 +72,10 @@ h1,h2 {
     font-size: 4em;
     font-weight: 100;
     color: red;
+}
+
+h1.menuhead {
+    font-size: 4vw;
 }
 
 a {

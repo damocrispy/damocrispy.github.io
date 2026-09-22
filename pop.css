@@ -13,6 +13,12 @@
     src: url('./font/CourierPrime-Regular.ttf') format("truetype");
 }
 
+@media screen and (max-width: 600px) {
+    img { display: none; }
+    .buffer { display: none; }
+    .section { width: 100%; }
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -24,42 +30,44 @@ body {
     display: flex;
     flex-direction: row;
     font-family: "Winky Sans";
-    font-size: large;
+    font-size: larger;
 }
 
-#buffer {
+.buffer {
     width: 20%;
 }
 
-#section {
+.section {
     background-color: yellow;
     display: flex;
     flex-direction: column;
+    flex: 1;
     width: 60%;
     padding-bottom: 25%;
 }
 
-#banner {
+.banner {
     color: deeppink;
     -webkit-text-stroke: 5px deepskyblue;
     text-align: center;
     font-family: "Spicy Sale";
-    font-size: 8vw;
-    padding: 2vw;
+    font-size: 12vw;
+    padding: 2vw 0 2vw 0;
 }
 
-#content {
+.content {
     margin: 0 5vw 0 5vw;
     text-align: justify;
     text-justify: inter-word;
     color: deeppink;
 }
 
-ul {
+ul.menu-list {
     list-style-type: none;
     position: fixed;
-    top: 25vh;
-    font-size: x-large;
+    top: 20vh;
+    list-style-position: inside;
+    padding: 3vw;
 }
 
 h1,
@@ -69,9 +77,13 @@ h2 {
     color: deeppink;
 }
 
-.menu-list h1 {
+ul.menu-list h1 {
     font-family: "Spicy Sale";
     color: deeppink;
+}
+
+h1.menuhead {
+    font-size: 4vw;
 }
 
 a {

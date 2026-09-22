@@ -3,6 +3,12 @@
     src: url('./font/CourierPrime-Regular.ttf') format("truetype");
 }
 
+@media screen and (max-width: 600px) {
+    img { display: none; }
+    .buffer { display: none; }
+    .section { width: 100%; }
+}
+
 html,body {
     margin: 0;
     padding: 0;
@@ -18,29 +24,30 @@ body {
     color: #1ee5d3;
 }
 
-#buffer {
+.buffer {
     width: 20%;
     background-color: #44282a;
 }
 
-#section {
+.section {
     display: flex;
     flex-direction: column;
+    flex: 1;
     width: 60%;
     padding-bottom: 25%;
 }
 
-#banner {
+.banner {
     color: #1ee5d3;
     text-align: center;
-    font-size: 8vw;
+    font-size: 12vw;
     font-weight: bold;
     text-shadow: 0 0 30px;
     justify-content: center;
-    padding: 2vw;
+    padding: 2vw 0 2vw 0;
 }
 
-#content {
+.content {
     margin: 0 5vw 0 5vw;
     text-align: justify;
     text-justify: inter-word;
@@ -67,6 +74,10 @@ h1,h2,h3 {
 
 h1 {
     font-size: 3em;
+}
+
+h1.menuhead {
+    font-size: 4vw;
 }
 
 a {
