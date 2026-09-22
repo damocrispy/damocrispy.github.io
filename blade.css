@@ -87,6 +87,7 @@ a {
 
 pre {
     white-space: pre-wrap;
+    overflow-wrap: anywhere;
     text-indent: 3em hanging each-line;
     text-align: left;
     background-color: #0272a9;
