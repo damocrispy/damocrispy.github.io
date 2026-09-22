@@ -73,6 +73,10 @@ h1,h2 {
     color: red;
 }
 
+h1.menuhead {
+    font-size: 5vw;
+}
+
 a {
     color: red;
 }

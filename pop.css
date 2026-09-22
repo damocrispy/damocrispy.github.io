@@ -18,6 +18,7 @@
     .buffer { display: none; }
     .section { width: 100%; }
     pre { white-space: normal; overflow-wrap: anywhere; }
+    .banner { -webkit-text-stroke: 3px deepskyblue; }
 }
 
 html, body {
@@ -52,7 +53,7 @@ body {
     -webkit-text-stroke: 5px deepskyblue;
     text-align: center;
     font-family: "Spicy Sale";
-    font-size: max(80px, 12vw);
+    font-size: max(75px, 12vw);
     padding: 2vw 0 2vw 0;
 }
 
