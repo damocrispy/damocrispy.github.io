@@ -45,7 +45,7 @@ body {
     color: red;
     text-align: center;
     font-family: "Misfits";
-    font-size: 15vw;
+    font-size: max(72px, 15vw);
     /* padding: 2vw; */
 }
 

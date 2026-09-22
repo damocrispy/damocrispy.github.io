@@ -46,7 +46,7 @@ body {
     display: flex;
     color: #8C162C;
     text-align: center;
-    font-size: 12vw;
+    font-size: max(72px, 12vw);
     font-weight: bold;
     justify-content: center;
     padding: 5vw 0 2vw 0;

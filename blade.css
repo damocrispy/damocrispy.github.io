@@ -40,7 +40,7 @@ body {
 .banner {
     color: #1ee5d3;
     text-align: center;
-    font-size: 12vw;
+    font-size: max(72px, 12vw);
     font-weight: bold;
     text-shadow: 0 0 30px;
     justify-content: center;

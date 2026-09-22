@@ -43,7 +43,7 @@ body {
     width: 100%;
     background-color: black;
     font-family: 'Times New Roman', Times, serif;
-    font-size: 15vw;
+    font-size: max(72px, 15vw);
     white-space: nowrap;
     color: white;
     justify-content: center;
