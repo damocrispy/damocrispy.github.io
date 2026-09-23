@@ -43,11 +43,10 @@ body {
     background-color: #84422c;
     color: #1ee5d3;
     text-align: center;
-    font-size: max(85px, 12vw);
+    font-size: max(85px, 10vw);
     font-weight: bold;
     text-shadow: 0 0 30px;
     justify-content: center;
-    padding: 2vw 0 2vw 0;
 }
 
 .content {

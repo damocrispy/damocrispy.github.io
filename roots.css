@@ -48,10 +48,10 @@ body {
     background-color: #400E17;
     color: #8C162C;
     text-align: center;
-    font-size: max(85px, 12vw);
+    font-size: max(85px, 8vw);
     font-weight: bold;
     justify-content: center;
-    padding: 5vw 0 2vw 0;
+    padding: 2vw 0 2vw 0;
 }
 
 .content {

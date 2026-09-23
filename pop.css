@@ -58,8 +58,7 @@ body {
     -webkit-text-stroke: 5px deepskyblue;
     text-align: center;
     font-family: "Spicy Sale";
-    font-size: max(75px, 12vw);
-    padding: 2vw 0 2vw 0;
+    font-size: max(75px, 10vw);
 }
 
 @media screen and (max-width: 600px) {

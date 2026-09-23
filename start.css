@@ -47,7 +47,7 @@ body {
     color: red;
     text-align: center;
     font-family: "Misfits";
-    font-size: max(85px, 15vw);
+    font-size: max(85px, 10vw);
 }
 
 .content {

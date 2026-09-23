@@ -43,10 +43,9 @@ body {
     position: sticky;
     top: 0;
     width: 100%;
-    padding: 2vw 0 2vw 0;
     background-color: black;
     font-family: 'Times New Roman', Times, serif;
-    font-size: max(85px, 15vw);
+    font-size: max(85px, 10vw);
     white-space: nowrap;
     color: white;
 }
