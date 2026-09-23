@@ -67,11 +67,10 @@ ul.body-list {
 
 ul.menu-list {
     list-style-type: none;
+    list-style-position: inside;
     position: fixed;
     top: 25vh;
-    list-style-position: inside;
     font-size: x-large;
-    padding: 3vw;
 }
 
 h1 {

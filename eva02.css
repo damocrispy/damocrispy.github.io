@@ -69,12 +69,11 @@ ul.body-list {
 
 ul.menu-list {
     list-style-type: none;
+    list-style-position: inside;
     position: fixed;
     top: 25vh;
-    list-style-position: inside;
-    color: #E6770B;
-    padding: 3vw;
     font-size: large;
+    color: #E6770B;
 }
 
 h1 {

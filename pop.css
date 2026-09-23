@@ -74,10 +74,9 @@ body {
 
 ul.menu-list {
     list-style-type: none;
-    position: fixed;
-    top: 20vh;
     list-style-position: inside;
-    padding: 3vw;
+    position: fixed;
+    top: 25vh;
     font-size: larger;
 }
 
