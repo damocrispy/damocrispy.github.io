@@ -21,7 +21,6 @@ body {
     display: flex;
     flex-direction: row;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: large;
     color: #1ee5d3;
 }
 
@@ -64,6 +63,7 @@ ul.menu-list {
     position: fixed;
     top: 25vh;
     list-style-position: inside;
+    font-size: large;
 }
 
 h1,h2,h3 {
@@ -92,7 +92,6 @@ pre {
     text-align: left;
     background-color: #0272a9;
     font-variant: normal;
-    font-size: large;
     color: #1ee5d3;
     padding: 10px;
     border-radius: 10px;

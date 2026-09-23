@@ -25,7 +25,7 @@ body {
     display: flex;
     flex-direction: row;
     font-family: "Casablanca";
-    font-size: 22px;
+    font-size: 1.2rem;
     color: #F2D194;
 }
 
@@ -49,7 +49,7 @@ body {
     font-size: max(85px, 12vw);
     font-weight: bold;
     justify-content: center;
-    padding: 5vw 0 2vw 0;
+    padding: 5vw 0 0 0;
 }
 
 .content {
@@ -98,7 +98,7 @@ pre {
     text-align: left;
     background-color: #400E17;
     font-variant: normal;
-    font-size: large;
+    font-size: 1rem;
     padding: 10px;
     border-radius: 10px;
 }

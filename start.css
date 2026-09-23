@@ -25,7 +25,6 @@ body {
     display: flex;
     flex-direction: row;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: large;
 }
 
 .buffer {
@@ -64,6 +63,7 @@ ul.menu-list {
     position: fixed;
     top: 25vh;
     list-style-position: inside;
+    font-size: large;
 }
 
 h1,h2 {
