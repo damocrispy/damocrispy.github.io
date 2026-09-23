@@ -7,7 +7,6 @@
 @media screen and (max-width: 600px) {
     img { display: none; }
     .buffer { display: none; }
-    .section { width: 100%; }
     pre { white-space: normal; overflow-wrap: anywhere; }
 }
 
@@ -31,27 +30,29 @@ body {
 }
 
 .section {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
     width: 60%;
     padding-bottom: 25%;
 }
 
+@media screen and (max-width: 600px) {
+    .section { width: 100%; }
+}
+
 .banner {
-    display: flex;
+    position: sticky;
+    top: 0;
     width: 100%;
     background-color: black;
     font-family: 'Times New Roman', Times, serif;
     font-size: max(85px, 15vw);
     white-space: nowrap;
     color: white;
-    justify-content: center;
     padding: 2vw 0 2vw 0;
 }
 
 .banner span {
-    display: block;
+    display: flex; 
+    justify-content: center;
     transform: scale(0.6, 1);
     text-shadow: 0 0 30px;
 }

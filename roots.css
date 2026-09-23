@@ -11,7 +11,6 @@
 @media screen and (max-width: 600px) {
     img { display: none; }
     .buffer { display: none; }
-    .section { width: 100%; }
 }
 
 html,body {
@@ -35,21 +34,24 @@ body {
 }
 
 .section {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
     width: 60%;
     padding-bottom: 25%;
 }
 
+@media screen and (max-width: 600px) {
+    .section { width: 100%; }
+}
+
 .banner {
-    display: flex;
+    position: sticky;
+    top: 0;
+    background-color: #400E17;
     color: #8C162C;
     text-align: center;
     font-size: max(85px, 12vw);
     font-weight: bold;
     justify-content: center;
-    padding: 5vw 0 0 0;
+    padding: 5vw 0 2    vw 0;
 }
 
 .content {

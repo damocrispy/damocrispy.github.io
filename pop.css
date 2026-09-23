@@ -16,7 +16,6 @@
 @media screen and (max-width: 600px) {
     img { display: none; }
     .buffer { display: none; }
-    .section { width: 100%; }
     pre { white-space: normal; overflow-wrap: anywhere; }
 }
 
@@ -47,7 +46,14 @@ body {
     padding-bottom: 25%;
 }
 
+@media screen and (max-width: 600px) {
+    .section { width: 100%; }
+}
+
 .banner {
+    position: sticky;
+    top: 0;
+    background-color: yellow;
     color: deeppink;
     -webkit-text-stroke: 5px deepskyblue;
     text-align: center;
