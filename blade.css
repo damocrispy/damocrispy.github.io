@@ -38,14 +38,50 @@ body {
 }
 
 .banner {
-    position: sticky;
-    top: 0;
+    /* position: sticky;
+    top: 0; */
     background-color: #84422c;
     color: #1ee5d3;
     text-align: center;
     font-size: max(85px, 10vw);
     font-weight: bold;
     text-shadow: 0 0 30px;
+}
+
+.links {
+    display: none;
+    background-color: #84422c;
+    padding: 0 0 5vw 5vw;
+}
+
+@media screen and (max-width: 600px) {
+    .links { display: block; }
+}
+
+input[type="checkbox"] {    /*  Hide the checkbox   */
+    display: none; 
+}
+
+.hiddenmenu {               /* Menu default */
+    display: none;
+}
+
+.hiddenmenuhead {
+    color: #1ee5d3;
+    text-shadow: 0 0 30px;
+    font-size: 5vw;
+    font-weight: bold;
+}
+
+#menubtn:checked ~ .hiddenmenu {    /* Menu when checkbox toggled */
+    display: block;
+    background-color: #0272a9;
+    padding: 3vw;
+    border-radius: 10px;
+    list-style-type: none;
+    list-style-position: inside;
+    position: fixed;
+    font-size: large;
 }
 
 .content {
