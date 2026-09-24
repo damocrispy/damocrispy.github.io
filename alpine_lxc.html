@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,6 +24,19 @@
     </div>
     <div class="section">
         <div class="banner"><span>ALPINE LXC</span></div>
+        <div class="links">
+            <label class="hiddenmenuhead" for="menubtn">Pages</label>
+            <input type="checkbox" id="menubtn" />
+            <ul class="hiddenmenu">
+                <li><a href="./index.html">Home</a></li>
+                <li><a href="./proxmox.html">Proxmox</a></li>
+                <li><a href="./bastion.html">Bastion</a></li>
+                <li><a href="./alpine_lxc.html">Alpine LXC</a></li>
+                <li><a href="./pihole.html">Pi-hole</a></li>
+                <li><a href="./jellyfin.html">Jellyfin</a></li>
+                <li><a href="./about.html">About</a></li>
+            </ul>
+        </div>
         <div class="content">
             <p>This is the creation and basic setup of a Linux container running Alpine linux on Proxmox. I've used this
                 a few times. Rather than have it in every page that uses it, I'll just link back to this. This assumes
@@ -62,8 +75,7 @@ rc-update add sshd  # Set to start on reboot</code></pre>
             to <code id="inline-bash">PermitRootLogin no</code>
             </p>
             <p>Create/configure new user.
-                <a
-                    href="https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user">From here.</a>
+                <a href="https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user">From here.</a>
 
             <pre><code id="language-bash">setup-user -a damo # Creates a locked user
 grep damo /etc/passwd

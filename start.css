@@ -9,11 +9,17 @@
 }
 
 @media screen and (max-width: 600px) {
-    img { display: none; }
-    .buffer { display: none; }
+    img {
+        display: none;
+    }
+
+    .buffer {
+        display: none;
+    }
 }
 
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -37,17 +43,59 @@ body {
 }
 
 @media screen and (max-width: 600px) {
-    .section { width: 100%; }
+    .section {
+        width: 100%;
+    }
 }
 
 .banner {
-    position: sticky;
-    top: 0;
     background-color: rgb(192, 192, 192);
     color: red;
     text-align: center;
     font-family: "Misfits";
     font-size: max(85px, 10vw);
+}
+
+.links {
+    display: none;
+    padding: 0 0 10vw 5vw;
+}
+
+@media screen and (max-width: 600px) {
+    .links {
+        display: block;
+    }
+}
+
+input[type="checkbox"] {
+    /*  Hide the checkbox   */
+    display: none;
+}
+
+.hiddenmenu {
+    /* Menu default */
+    display: none;
+}
+
+.hiddenmenuhead {
+    font-family: "Misfits";
+    color: red;
+    font-size: 7vw;
+}
+
+#menubtn:checked~.hiddenmenu {
+    /* Menu when checkbox toggled */
+    display: block;
+    background-color: rgb(64, 64, 64);
+    padding: 3vw;
+    margin-top: 1vw;
+    border-radius: 3px;
+    list-style-type: none;
+    position: absolute;
+    width: min-content;
+    white-space: nowrap;
+    font-family: "Misfits";
+    font-size: 1.4rem;
 }
 
 .content {
@@ -63,13 +111,14 @@ ul.body-list {
 
 ul.menu-list {
     list-style-type: none;
-    list-style-position: inside;
     position: fixed;
     top: 25vh;
-    font-size: large;
+    font-family: "Misfits";
+    font-size: 1.5rem;
 }
 
-h1,h2 {
+h1,
+h2 {
     font-family: "Misfits";
     font-size: 3em;
     font-weight: 100;

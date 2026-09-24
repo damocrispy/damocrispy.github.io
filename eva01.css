@@ -5,13 +5,24 @@
 }
 
 @media screen and (max-width: 600px) {
+
     /* body { font-size: 1rem; } */
-    img { display: none; }
-    .buffer { display: none; }
-    pre { white-space: normal; overflow-wrap: anywhere; }
+    img {
+        display: none;
+    }
+
+    .buffer {
+        display: none;
+    }
+
+    pre {
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
 }
 
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -36,12 +47,12 @@ body {
 }
 
 @media screen and (max-width: 600px) {
-    .section { width: 100%; }
+    .section {
+        width: 100%;
+    }
 }
 
 .banner {
-    position: sticky;
-    top: 0;
     width: 100%;
     background-color: black;
     font-family: 'Times New Roman', Times, serif;
@@ -51,10 +62,54 @@ body {
 }
 
 .banner span {
-    display: flex; 
+    display: flex;
     justify-content: center;
     transform: scale(0.6, 1);
     text-shadow: 0 0 30px;
+}
+
+.links {
+    display: none;
+    background-color: black;
+    padding: 0 0 1vw 5vw;
+}
+
+@media screen and (max-width: 600px) {
+    .links {
+        display: block;
+    }
+}
+
+input[type="checkbox"] {
+    /*  Hide the checkbox   */
+    display: none;
+}
+
+.hiddenmenu {
+    /* Menu default */
+    display: none;
+}
+
+.hiddenmenuhead {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 5vw;
+    text-shadow: 0 0 30px;
+    color: white;
+}
+
+#menubtn:checked~.hiddenmenu {
+    /* Menu when checkbox toggled */
+    display: block;
+    background-color: #52D053;
+    padding: 3vw;
+    margin-top: 1vw;
+    border-radius: 5px;
+    list-style-type: none;
+    position: absolute;
+    width: min-content;
+    white-space: nowrap;
+    font-family: 'Times New Roman', Times, serif;
+    color: #592661;
 }
 
 .content {
@@ -70,9 +125,9 @@ ul.body-list {
 
 ul.menu-list {
     list-style-type: none;
-    list-style-position: inside;
     position: fixed;
     top: 25vh;
+    font-family: 'Times New Roman', Times, serif;
     font-size: large;
     color: #52D053;
 }
@@ -86,7 +141,8 @@ h1.menuhead {
     font-size: 4vw;
 }
 
-h2, h3 {
+h2,
+h3 {
     color: #E6770B;
 }
 

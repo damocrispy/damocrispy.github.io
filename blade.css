@@ -4,12 +4,22 @@
 }
 
 @media screen and (max-width: 600px) {
-    img { display: none; }
-    .buffer { display: none; }
-    pre { white-space: normal; overflow-wrap: anywhere; }
+    img {
+        display: none;
+    }
+
+    .buffer {
+        display: none;
+    }
+
+    pre {
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
 }
 
-html,body {
+html,
+body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -34,12 +44,12 @@ body {
 }
 
 @media screen and (max-width: 600px) {
-    .section { width: 100%; }
+    .section {
+        width: 100%;
+    }
 }
 
 .banner {
-    /* position: sticky;
-    top: 0; */
     background-color: #84422c;
     color: #1ee5d3;
     text-align: center;
@@ -51,18 +61,22 @@ body {
 .links {
     display: none;
     background-color: #84422c;
-    padding: 0 0 5vw 5vw;
+    padding: 0 0 15vw 5vw;
 }
 
 @media screen and (max-width: 600px) {
-    .links { display: block; }
+    .links {
+        display: block;
+    }
 }
 
-input[type="checkbox"] {    /*  Hide the checkbox   */
-    display: none; 
+input[type="checkbox"] {
+    /*  Hide the checkbox   */
+    display: none;
 }
 
-.hiddenmenu {               /* Menu default */
+.hiddenmenu {
+    /* Menu default */
     display: none;
 }
 
@@ -73,15 +87,17 @@ input[type="checkbox"] {    /*  Hide the checkbox   */
     font-weight: bold;
 }
 
-#menubtn:checked ~ .hiddenmenu {    /* Menu when checkbox toggled */
+#menubtn:checked~.hiddenmenu {
+    /* Menu when checkbox toggled */
     display: block;
     background-color: #0272a9;
     padding: 3vw;
+    margin-top: 1vw;
     border-radius: 10px;
     list-style-type: none;
-    list-style-position: inside;
-    position: fixed;
-    font-size: large;
+    position: absolute;
+    width: min-content;
+    white-space: nowrap;
 }
 
 .content {
@@ -97,17 +113,16 @@ ul.body-list {
 
 ul.menu-list {
     list-style-type: none;
-    list-style-position: inside;
     position: fixed;
     top: 25vh;
     font-size: large;
 }
 
-h1,h2,h3 {
+h1,
+h2,
+h3 {
     color: #1ee5d3;
     text-shadow: 0 0 30px;
-    /* font-size: 3em; */
-    /* font-weight: 300; */
 }
 
 h1 {

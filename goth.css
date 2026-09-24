@@ -4,11 +4,17 @@
 }
 
 @media screen and (max-width: 600px) {
-    img { display: none; }
-    .buffer { display: none; }
+    img {
+        display: none;
+    }
+
+    .buffer {
+        display: none;
+    }
 }
 
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -35,17 +41,57 @@ body {
 }
 
 @media screen and (max-width: 600px) {
-    .section { width: 100%; }
+    .section {
+        width: 100%;
+    }
 }
 
 .banner {
-    position: sticky;
-    top: 0;
     background-color: black;
     padding: 2vw 0 2vw 0;
     text-align: center;
     font-family: "Olde English";
     font-size: max(85px, 10vw);
+}
+
+.links {
+    display: none;
+    background-color: black;
+    padding: 0 0 10vw 5vw;
+}
+
+@media screen and (max-width: 600px) {
+    .links {
+        display: block;
+    }
+}
+
+input[type="checkbox"] {
+    /*  Hide the checkbox   */
+    display: none;
+}
+
+.hiddenmenu {
+    /* Menu default */
+    display: none;
+}
+
+.hiddenmenuhead {
+    font-size: 8vw;
+    font-family: "Olde English";
+}
+
+#menubtn:checked~.hiddenmenu {
+    /* Menu when checkbox toggled */
+    display: block;
+    background-color: black;
+    padding: 3vw;
+    margin-top: 1vw;
+    border-radius: 2px;
+    list-style-type: none;
+    position: absolute;
+    width: min-content;
+    white-space: nowrap;
 }
 
 .content {
@@ -61,12 +107,13 @@ ul.body-list {
 
 ul.menu-list {
     list-style-type: none;
-    list-style-position: inside;
     position: fixed;
     top: 25vh;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     font-family: "Olde English";
     font-size: 3em;
     font-weight: 100;
