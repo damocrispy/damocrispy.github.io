@@ -136,6 +136,7 @@ h1 {
 
 h1.menuhead {
     font-size: 4vw;
+    text-shadow: 0 0 30px;
 }
 
 h2,
@@ -163,7 +164,7 @@ code {
     font-family: "Courier Prime";
 }
 
-#inline-bash {
+.inline-bash {
     background-color: #E6770B;
     font-variant: normal;
     font-size: large;
@@ -172,7 +173,7 @@ code {
     border-radius: 3px;
 }
 
-#header-bash {
+.header-bash {
     font-variant: normal;
     font-size: 1em;
 }

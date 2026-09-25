@@ -71,8 +71,8 @@ rc-service sshd start
 rc-update add sshd  # Set to start on reboot</code></pre>
             <p>Disable root login.
             <pre><code id="language-bash">vi /etc/ssh/sshd_config</code></pre>
-            Change <code id="inline-bash">#PermitRootLogin prohibit-password</code>
-            to <code id="inline-bash">PermitRootLogin no</code>
+            Change <code class="inline-bash">#PermitRootLogin prohibit-password</code>
+            to <code class="inline-bash">PermitRootLogin no</code>
             </p>
             <p>Create/configure new user.
                 <a href="https://wiki.alpinelinux.org/wiki/Setting_up_a_new_user">From here.</a>
@@ -100,9 +100,8 @@ doas pwd
 /home/damo
 </code></pre>
             </p>
-            <p>Configure ssh.
-                Create key pair on dev machine <code id="inline-bash">ssh-keygen -t ed25519</code>.
-                Then on new container:
+            <p>Configure ssh. Create key pair on dev machine <code class="inline-bash">ssh-keygen -t ed25519</code>. Then
+                on new container:
             <pre><code id="language-bash">mkdir -p /home/damo/.ssh
 chmod 700 /home/damo/.ssh/
 echo &quot;ssh-ed25519 XXX damo@thinkpad&quot; &gt; /home/damo/.ssh/authorized_keys
@@ -110,7 +109,7 @@ chmod 600 /home/damo/.ssh/authorized_keys
 </code></pre>
             </p>
             <h2>Configure firewall</h2>
-            <p>Install <code id="inline-bash">iptables</code> and create rules to allow SSH connections from the Bastion
+            <p>Install <code class="inline-bash">iptables</code> and create rules to allow SSH connections from the Bastion
                 only.
             <pre><code id="language-bash">apk add iptables
 rc-update add iptables  # Set to start on reboot

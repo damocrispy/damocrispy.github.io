@@ -77,11 +77,11 @@ rc-service iptables save
             <p>Pi-hole was a bit of an ordeal. My notes show four attempts to get it up and running.</p>
             <h2>Attempt #1: Official Pi-hole install script</h2>
             <p>I ran the official install script which appeared to execute just fine but gave an error when I tried to
-                update the the application itself (<code id="inline-bash">/usr/local/bin/pihole -up</code>). This gave
-                the error <code id="inline-bash">Web Admin repo is missing from system!</code> and suggested I
+                update the the application itself (<code class="inline-bash">/usr/local/bin/pihole -up</code>). This gave
+                the error <code class="inline-bash">Web Admin repo is missing from system!</code> and suggested I
                 re-run the install script. I tried to repair this (<code
-                    id="inline-bash">/usr/local/bin/pihole -r</code>) and was told <code
-                    id="inline-bash">Unable to reset /usr/share/pihole/admin-web/admin/, exiting installer</code>. I
+                    class="inline-bash">/usr/local/bin/pihole -r</code>) and was told <code
+                    class="inline-bash">Unable to reset /usr/share/pihole/admin-web/admin/, exiting installer</code>. I
                 re-ran the installer, which was fine. Re-ran the update, got the same error.</p>
             <p><a
                     href="https://discourse.pi-hole.net/t/error-web-admin-repo-is-missing-from-system-unable-to-upgrade-to-release-5-16-1/62034">Tried
@@ -104,11 +104,11 @@ sudo git clone https://github.com/pi-hole/web.git /var/www/html/admin
                 Pi-hole to Alpine linux but as of now, <a
                     href="https://pkgs.alpinelinux.org/packages?name=*pihole*&branch=edge&repo=&arch=x86_64&origin=&flagged=&maintainer=">it's
                     still in the testing repo</a>.</p>
-            <p>Installed via Alpine package manager but running <code id="inline-bash">pihole status</code> gave an
-                error <code id="inline-bash">ss: command not found</code>. This lives in iproute2, I installed that,
+            <p>Installed via Alpine package manager but running <code class="inline-bash">pihole status</code> gave an
+                error <code class="inline-bash">ss: command not found</code>. This lives in iproute2, I installed that,
                 re-ran the status check, everything looked good.</p>
             <p>Checked the application in the rowser and was told to "Update the list of ad-serving domains". I ran
-                <code id="inline-bash">pihole -g</code>, <a
+                <code class="inline-bash">pihole -g</code>, <a
                     href="https://docs.pi-hole.net/main/pihole-command/#gravity">which should update the blocklists</a>.
                 This gave me a DNS error. I got nowhere trying to sort this one out either.
             </p>
@@ -127,8 +127,8 @@ sudo git clone https://github.com/pi-hole/web.git /var/www/html/admin
             <pre><code id="">curl -sSL https://install.pi-hole.net | bash</code></pre>
             <p>This looked all good. It brought up the install interface that I had only seen in Attempt #3 and
                 tutorials. opening the app in the browser I'm told "Domains on list 93,156". Very nice. <code
-                    id="inline-bash">pihole -v</code> showed latest versions. <code id="inline-bash">pihole -g</code>
-                ran just fine. <code id="inline-bash">pihole -up</code> showed everything up to date. Alright. It's
+                    class="inline-bash">pihole -v</code> showed latest versions. <code class="inline-bash">pihole -g</code>
+                ran just fine. <code class="inline-bash">pihole -up</code> showed everything up to date. Alright. It's
                 running.</p>
             <h2>Making it actually work</h2>
             <p>I'm not going to go through the troubleshooting here but there are a few important points I learned. To
@@ -139,7 +139,7 @@ sudo git clone https://github.com/pi-hole/web.git /var/www/html/admin
             <h3>VPN</h3>
             <p>I use NordVPN (currently). I have this set up on each device - laptop, phone. If I'm connected to the
                 VPN, DNS requests are routed to the VPN provider's DNS service - the VPN app overwrites <code
-                    id="inline-bash">/etc/resolv.conf</code>. If I'm on the VPN, the Pi-hole is ignored. To test the
+                    class="inline-bash">/etc/resolv.conf</code>. If I'm on the VPN, the Pi-hole is ignored. To test the
                 Pi-hole from the laptop, I need to disconnect from the VPN. So I did, for the duration of testing.
             </p>
             <h3>DHCP</h3>
