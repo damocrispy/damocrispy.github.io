@@ -1,0 +1,201 @@
+/* https://www.thelcars.com/ */
+@font-face {
+    font-family: "Courier Prime";
+    src: url('./font/CourierPrime-Regular.ttf') format("truetype");
+}
+@font-face {
+    font-family: "Antonio";
+    src: url('./static/Antonio-Regular.ttf') format("truetype");
+}
+
+@media screen and (max-width: 600px) {
+
+    /* body { font-size: 1rem; } */
+    img {
+        display: none;
+    }
+
+    .buffer {
+        display: none;
+    }
+
+    pre {
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+body {
+    background-color: #91908b;
+    display: flex;
+    flex-direction: row;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #5c432f;
+}
+
+.buffer {
+    width: 20%;
+    background-color: #FDB773;
+}
+
+.section {
+    width: 60%;
+    padding-bottom: 25%;
+}
+
+@media screen and (max-width: 600px) {
+    .section {
+        /* width: 100%; */
+        min-width: fit-content;
+    }
+}
+
+.banner {
+    width: 100%;
+    background-color: #7b3a1a;
+    font-family: "Antonio";
+    text-align: center;
+    font-size: max(55px, 8vw);
+    font-weight: bold;
+    justify-content: center;
+    color: #307ebc;
+    padding: 2vw 0 2vw 0;
+}
+
+.banner span {
+    display: flex;
+    justify-content: center;
+    transform: scale(0.6, 1); 
+}
+
+.links {
+    display: none;
+    background-color: black;
+    padding: 1vw 0 1vw 5vw;
+}
+
+@media screen and (max-width: 600px) {
+    .links {
+        display: block;
+    }
+}
+
+input[type="checkbox"] {
+    /*  Hide the checkbox   */
+    display: none;
+}
+
+.hiddenmenu {
+    /* Menu default */
+    display: none;
+}
+
+.hiddenmenuhead {
+    font-family: "Antonio";
+    font-size: 5vw;
+    color: #8899ff;
+}
+
+#menubtn:checked~.hiddenmenu {
+    /* Menu when checkbox toggled */
+    display: block;
+    background-color: black;
+    padding: 3vw;
+    margin-top: 1vw;
+    border-radius: 10px;
+    list-style-type: none;
+    position: absolute;
+    width: min-content;
+    white-space: nowrap;
+    font-family: "Antonio";
+    color: #eb943a;
+}
+
+.content {
+    margin: 2vw 5vw 0 5vw;
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+ul.body-list {
+    position: static;
+    top: 25vh;
+}
+
+ul.menu-list {
+    list-style-type: none;
+    position: fixed;
+    padding: 2vw;
+    top: 35vh;
+    margin: 1vw;
+    background-color: black;
+    border-radius: 30px;
+    font-family: "Antonio";
+    font-size: large;
+    color: #eb943a;
+}
+
+h1 {
+    color: #A14646;
+}
+
+h1.menuhead {
+    margin: 0;
+    font-family: "Antonio";
+    font-size: 4vw;
+    color: #8899ff;
+}
+
+h2,
+h3 {
+    color: black;
+    /* font-size: 2vw; */
+    font-family: "Antonio";
+}
+
+a {
+    color: inherit;
+}
+
+pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    text-indent: 3em hanging each-line;
+    text-align: left;
+    background-color: #A14646;
+    font-variant: normal;
+    color: black;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+code {
+    font-family: "Courier Prime";
+}
+
+.inline-bash {
+    background-color: #A14646;
+    font-variant: normal;
+    font-size: large;
+    color: black;
+    padding: 0px 3px;
+    border-radius: 3px;
+}
+
+.header-bash {
+    font-variant: normal;
+    font-size: 1em;
+}
+
+img {
+    width: 100%;
+    position: sticky;
+    top: 0;
+}

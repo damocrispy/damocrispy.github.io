@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kubernetes</title>
+    <link rel="stylesheet" href="bridge.css">
+</head>
+
+<body>
+    <div class="buffer">
+        <img src="./images/bridge.jpg" title="Q'Plah!">
+        <ul class="menu-list">
+            <h1 class="menuhead">Pages</h1>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./proxmox.html">Proxmox</a></li>
+            <li><a href="./bastion.html">Bastion</a></li>
+            <li><a href="./alpine_lxc.html">Alpine LXC</a></li>
+            <li><a href="./pihole.html">Pi-hole</a></li>
+            <li><a href="./jellyfin.html">Jellyfin</a></li>
+            <li><a href="./k8s.html">Kubernetes</a></li>
+            <li><a href="./about.html">About</a></li>
+        </ul>
+    </div>
+    <div class="section">
+        <div class="banner">KUBERNETES</div>
+        <div class="links">
+            <label class="hiddenmenuhead" for="menubtn">Pages</label>
+            <input type="checkbox" id="menubtn" />
+            <ul class="hiddenmenu">
+                <li><a href="./index.html">Home</a></li>
+                <li><a href="./proxmox.html">Proxmox</a></li>
+                <li><a href="./bastion.html">Bastion</a></li>
+                <li><a href="./alpine_lxc.html">Alpine LXC</a></li>
+                <li><a href="./pihole.html">Pi-hole</a></li>
+                <li><a href="./jellyfin.html">Jellyfin</a></li>
+                <li><a href="./k8s.html">Kubernetes</a></li>
+                <li><a href="./about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <p><a href="https://proxmoxr.com/blog/proxmox-kubernetes-setup">Following this</a>. <a
+                    href="https://www.baeldung.com/ops/k3s-getting-started">And this</a>.
+                I don't want to use Ubuntu, I want Debian coz I'm awkward. The guide uses Ubuntu Cloud. Debian has a
+                cloud equivalent. Cloud versions include <code class="inline-bash">cloud-init</code> which is a tool
+                used in VMs to allow
+                config at startup of the VM.
+                <a href="https://pve.proxmox.com/pve-docs/qm.1.html#cli_qm_create">Memorise this</a>.
+                <a href="https://kubernetes.io/docs/reference/glossary/?fundamental=true">Kubernetes jargon</a>.
+            </p>
+            <h2>Create a template</h2>
+            <pre><code class="language-bash">$ wget https://cloud.debian.org/images/cloud/trixie/latest/debian-13-azure-amd64.tar.xz
+$ tar -xvf debian-13-azure-amd64.tar.xz
+$ mv disk.raw debian-13-azure-amd64.raw # To prevent mistakes
+$ qm create 103 --name debian-cloud --memory 2048 --cores 2 --net0 virtio,bridge=vmbr0
+$ qm list
+$ qm importdisk 103 debian-13-azure-amd64.raw local-lvm # Import image as unused disk
+$ qm set 103 --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-103-disk-0 # Configure SCSI controller, use volume as a virtual SCSI hard disk
+$ qm set 103 --ide2 local-lvm:cloudinit # Set volume as IDE hard disk
+$ qm set 103 --boot c --bootdisk scsi0 # set boot order and specify disk
+$ qm set 103 --serial0 socket --vga serial0 # Create serial device, configure VGA to use it
+$ qm set 103 --agent enabled=1 # Commes with QEMU guest agent
+$ qm set 103 --ciuser admin --cipassword [password] # Seriously? I just paste it into the terminal?
+$ qm set 103 --ipconfig0 ip=dhcp
+$ qm set 103 --onboot 1
+$ qm resize 103 scsi0 20G # The Debian image is 30GB anyway so this won't go smaller
+# shrinking disks is not supported
+$ qm template 103
+</code></pre>
+            <h2>Spin up some Kubernetes nodes.</h2>
+            <pre><code class="language-bash">$ qm clone 103 104 --name k8s-ctrlpln --full
+$ qm clone 103 105 --name k8s-worker1 --full
+$ qm clone 103 106 --name k8s-worker2 --full
+# Set static IPs
+$ qm set 104 --ipconfig0 ip=192.168.1.104/24,gw=192.168.1.1
+$ qm set 105 --ipconfig0 ip=192.168.1.105/24,gw=192.168.1.1
+$ qm set 106 --ipconfig0 ip=192.168.1.106/24,gw=192.168.1.1
+</code></pre>
+            <p>Do the stuff for the SSH. Keys for each:</p>
+            <pre><code class="language-bash">$ ssh-keygen -t ed25519
+</code></pre>
+            <p>Add these all to <code class="inline-bash">~/.ssh/config</code>, e.g.:</p>
+            <pre><code class="language-bash">Host k8s-ctrlpln
+  User admin
+  Hostname 192.168.1.104
+  ProxyJump bastion
+  IdentityFile ~/.ssh/k8s-ctrlpln
+</code></pre>
+            <p>Start and log in to each VM and add public key, e.g.:</p>
+            <pre><code class="language-bash">$ qm start 105
+$ qm terminal 105    # Log in as admin
+$ echo &quot;ssh-ed25519 XXX damo@thinkpad&quot;
+</code></pre>
+            <p>And sure while you're in there, update the root password with <code
+                    class="language-bash">sudo passwd root</code>.</p>
+            <h2>Install K3s</h2>
+            <p>Install on the control plane node. Do the installations as root. Otherwise you'll get permissions errors
+                trying to install Flannel.</p>
+            <pre><code class="language-bash">$ curl -sfL https://get.k3s.io | sh -
+</code></pre>
+            <p>Show the token and config.</p>
+            <pre><code class="language-bash">$ cat /var/lib/rancher/k3s/server/node-token
+$ cat /etc/rancher/k3s/k3s.yaml
+</code></pre>
+            <p>Install on the worker nodes and give them the token and the IP of the control plane.</p>
+            <pre><code class="language-bash">$ curl -sfL https://get.k3s.io | K3S_URL=https://192.168.1.104:6443 K3S_TOKEN=[TOKEN] sh -
+</code></pre>
+            <p>Check they're up and talking. From the control plane run this.</p>
+            <pre><code class="language-bash">$ kubectl get nodes
+NAME          STATUS   ROLES           AGE     VERSION
+k8s-ctrlpln   Ready    control-plane   3h27m   v1.36.4+k3s1
+k8s-worker1   Ready    &lt;none&gt;          88s     v1.36.4+k3s1
+k8s-worker2   Ready    &lt;none&gt;          49s     v1.36.4+k3s1
+</code></pre>
+            <p>Install Flannel plugin. It's for networking between containers - creating network interfaces, subnets, IP
+                management</p>
+            <pre><code class="language-bash">$ kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+</code></pre>
+            <h2>Deploy an application</h2>
+            <p>Let's deploy nginx coz that's what's in the Baeldung guide (second link at the top).</p>
+            <pre><code class="language-bash">$ kubectl create deployment nginx --image=nginx --port=80 --replicas=3
+</code></pre>
+            <p>That should spin up pods.</p>
+            <pre><code class="language-bash">$ kubectl get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+nginx-5cf8dc6bc5-gp7sb   1/1     Running   0          23s
+nginx-5cf8dc6bc5-hqqwh   1/1     Running   0          23s
+nginx-5cf8dc6bc5-nzwgk   1/1     Running   0          23s
+</code></pre>
+            <p>Three of them, like it was told. They've got “nginx” in the name so I suppose that means they're running
+                nginx.</p>
+            <h2>Service / Ingress / CNI</h2>
+            <p>Service</p>
+            <ul>
+                <li>Pods are up, down, moving between nodes</li>
+                <li>Service keeps track - send to service not individual pods</li>
+                <li>Can act as a load balancer</li>
+            </ul>
+            <p>Ingress</p>
+            <ul>
+                <li>Routes traffic to services</li>
+                <li>Can set rules - URL paths go to different services</li>
+                <li>Kind of like an API gateway</li>
+            </ul>
+            <p>CNI</p>
+            <ul>
+                <li>Assigns IPs to pods from cluster CIDR</li>
+                <li>Operates across nodes</li>
+                <li>Rule: every pod can reach every other pod directly</li>
+            </ul>
+            <h2>Service</h2>
+            <p>A service is sort of like an API that provides an abstraction layer for the pods in an application.</p>
+            <pre><code class="language-bash">$ kubectl create service clusterip nginx --tcp=80:80
+service/nginx created
+$ kubectl describe service nginx
+Name:                     nginx
+Namespace:                default
+Labels:                   app=nginx
+Annotations:              &lt;none&gt;
+Selector:                 app=nginx
+Type:                     ClusterIP
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.43.115.24
+IPs:                      10.43.115.24
+Port:                     80-80  80/TCP
+TargetPort:               80/TCP
+Endpoints:                10.42.2.3:80,10.42.1.3:80,10.42.0.9:80
+Session Affinity:         None
+Internal Traffic Policy:  Cluster
+Events:                   &lt;none&gt;
+</code></pre>
+            <h2>Ingress (Traefik)</h2>
+            <p>Create a yaml on the control plan node. Again, this is from the Baeldung guide.</p>
+            <pre><code class="language-bash">apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: &quot;false&quot;
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx
+            port:
+              number: 80
+</code></pre>
+            <p>That configures the ingress. Now start it.</p>
+            <pre><code class="language-bash">$ kubectl apply -f traefik.yaml
+ingress.networking.k8s.io/nginx created
+</code></pre>
+            <p>Check the configuration that's actually running. This should match the Traefik config and the setup of
+                the nodes.</p>
+            <pre><code class="language-bash">$ kubectl describe ingress nginx
+</code></pre>
+            <h2>Testing</h2>
+            <p>Service has an IP assigned to the cluster from a virtual subnet defined for the cluster. This was
+                assigned when the service was created above.</p>
+            <pre><code class="language-bash">$ kubectl get svc nginx
+NAME    TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+nginx   ClusterIP   10.43.115.24   &lt;none&gt;        80/TCP    8d
+</code></pre>
+            <p>The service type is ClusterIP meaning it's only accessible from within the cluster. This is the default
+                type. To access it externally (coz it's nginx) it needs to be type NodePort. <a
+                    href="https://www.geeksforgeeks.org/devops/kubernetes-cluster-ip-vs-node-port/">Read this</a>. So we
+                change the definition of the service. <a href="https://spacelift.io/blog/kubectl-patch-command">Read
+                    this</a>.</p>
+            <pre><code class="language-bash">$ kubectl describe services nginx | grep Type
+Type:                     ClusterIP
+$ kubectl patch service nginx \  # Change the service
+  --type='merge' \  # How the change is to be done. That's a whole rabbit hole.
+  -p '{&quot;spec&quot;:{&quot;type&quot;:&quot;NodePort&quot;}}'  # The change to be made, in JSON format
+service/nginx patched
+$ kubectl describe services nginx | grep Type
+Type:                     NodePort
+</code></pre>
+            <p>To access the nginx server query this port on the IP of any of the nodes. So if there are multiple
+                workers you can query the IP of any of them, at the relevant port and it will be redirected behind the
+                scenes to a pod that can be on any node in the cluster. Also we'll need to open the port in the firewall
+                of each node. Which port?</p>
+            <pre><code class="language-bash">$ kubectl get svc nginx
+NAME    TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+nginx   NodePort   10.43.115.24   &lt;none&gt;        80:30555/TCP   8d
+</code></pre>
+            <p>Port <code class="inline-bash">30555</code>.
+                Having a look at iptables first I can see this rule:</p>
+            <pre><code class="language-bash">$ iptables -L
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination         
+...
+ACCEPT     all  --  anywhere             anywhere
+...
+</code></pre>
+            <p>That means it's already accepting traffic. That means…</p>
+            <img src="images/nginx_screenshot.png" alt="Success!">
+            <p>Success!</p>
+        </div>
+    </div>
+    <div class="buffer"></div>
+</body>
+
+</html>
