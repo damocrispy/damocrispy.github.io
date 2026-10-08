@@ -14,7 +14,7 @@
 }
 
 @media screen and (max-width: 600px) {
-    img {
+    .inspo {
         display: none;
     }
 
@@ -183,4 +183,10 @@ code {
     font-family: "Winky Sans";
     font-variant: normal;
     font-size: 1em;
+}
+
+img {
+    width: 100%;
+    position: sticky;
+    top: 0;
 }

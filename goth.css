@@ -4,7 +4,7 @@
 }
 
 @media screen and (max-width: 600px) {
-    img {
+    .inspo {
         display: none;
     }
 
@@ -128,8 +128,14 @@ a {
     color: red;
 }
 
-img {
+.inspo {
     position: sticky;
     top: 0;
     width: 100%;
+}
+
+img {
+    width: 100%;
+    position: sticky;
+    top: 0;
 }

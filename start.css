@@ -9,7 +9,7 @@
 }
 
 @media screen and (max-width: 600px) {
-    img {
+    .inspo {
         display: none;
     }
 
@@ -131,4 +131,10 @@ h1.menuhead {
 
 a {
     color: red;
+}
+
+img {
+    width: 100%;
+    position: sticky;
+    top: 0;
 }

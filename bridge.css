@@ -5,13 +5,13 @@
 }
 @font-face {
     font-family: "Antonio";
-    src: url('./font/Antonio-Regular.ttf') format("truetype");
+    src: url('./font/Antonio-VariableFont_wght.ttf') format("truetype");
 }
 
 @media screen and (max-width: 600px) {
 
     /* body { font-size: 1rem; } */
-    img {
+    .inspo {
         display: none;
     }
 
@@ -192,6 +192,12 @@ code {
 .header-bash {
     font-variant: normal;
     font-size: 1em;
+}
+
+.inspo {
+    width: 100%;
+    position: sticky;
+    top: 0;
 }
 
 img {

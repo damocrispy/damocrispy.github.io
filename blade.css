@@ -4,7 +4,7 @@
 }
 
 @media screen and (max-width: 600px) {
-    img {
+    .inspo {
         display: none;
     }
 
@@ -165,6 +165,12 @@ code {
 #header-bash {
     font-variant: normal;
     font-size: 1em;
+}
+
+.inspo {
+    width: 100%;
+    position: sticky;
+    top: 0;
 }
 
 img {
